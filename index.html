@@ -206,6 +206,16 @@ select {
 .sheet-wrap { position: fixed; inset: 0; background: rgba(0, 0, 0, .65); display: flex; align-items: flex-end; justify-content: center; z-index: 20; padding-bottom: env(safe-area-inset-bottom, 0px); }
 .sheet { background: var(--ink); border: 1.5px solid var(--chalk-faint); border-radius: 18px 18px 0 0; width: 100%; max-width: 480px; box-sizing: border-box; padding: 22px max(16px, env(safe-area-inset-right, 0px)) 22px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 14px; }
 
+/* How to play */
+.section-title { font-size: 30px; margin-top: 4px; }
+.guide { display: grid; gap: 18px; }
+.guide section { display: grid; gap: 8px; padding-bottom: 18px; border-bottom: 1px solid var(--chalk-faint); }
+.guide section:last-child { border-bottom: 0; padding-bottom: 0; }
+.guide h3 { margin: 0; font: 700 18px var(--font-label); letter-spacing: .08em; text-transform: uppercase; color: var(--yellow); }
+.guide p, .guide li { color: var(--chalk-dim); max-width: 60ch; }
+.guide b { color: var(--chalk); font-weight: 600; }
+.guide ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+
 /* Host */
 .host { display: flex; gap: 10px; align-items: flex-end; text-align: left; width: 100%; }
 .host-fig { width: 96px; flex: none; animation: bob 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
@@ -697,7 +707,7 @@ function finish(outcome) {
 /* ---------- category theming ---------- */
 const THEME_KEYS = { bg: "--bg", bgImage: "--bg-image", panel: "--panel", ink: "--ink", cardSub: "--card-sub" };
 function activeCategory() {
-  if (S.screen === "home") return null;
+  if (S.screen === "home" || S.screen === "howto") return null;
   const key = S.game ? S.game.category : S.category;
   return key && CATEGORIES[key] ? CATEGORIES[key] : null;
 }
@@ -1095,14 +1105,53 @@ const views = {
       <h1>Imp<span style="color:var(--red)">o</span>ster</h1>
       <p class="lede">One phone, one secret, one liar. Pick a category, pass the phone round, say a word each, then find who's bluffing.</p>
       ${host("home")}
+      <h2 class="section-title">How to play</h2>
       <ol class="rules">
         <li><span><b>Everyone sees the secret</b> except one player, who only learns they're the imposter.</span></li>
         <li><span><b>Take turns saying one word</b> linked to the secret. ${S.rounds} rounds, out loud.</span></li>
         <li><span><b>Vote one by one</b> for who you think the imposter is. Most votes is accused.</span></li>
         <li><span><b>Caught?</b> The imposter gets one guess at the secret. Right guess steals the win.</span></li>
       </ol>
+      <button class="text-link" data-act="howto">Read the full rules</button>
       <div class="spacer"></div>
       <button class="btn" data-act="to-setup">Set up a game</button>
+    </section>`;
+  },
+
+  howto() {
+    return `${topbar()}
+    <section class="screen">
+      <div><p class="eyebrow">Rules</p><h2>How to play</h2></div>
+      <div class="guide">
+        <section><h3>What you need</h3>
+          <p>3 or more players and one phone. Everyone sits together, and the phone gets passed around.</p></section>
+        <section><h3>1. Set up</h3>
+          <p>Add everyone's name and pick a category, like Footballers or Animals. The game secretly picks one thing from that category, and secretly picks one player to be the imposter.</p></section>
+        <section><h3>2. Look at your card</h3>
+          <p>Pass the phone round. When it's your turn, make sure nobody else can see, tap to reveal your card, then hide it and pass on.</p>
+          <ul><li><b>Safe players</b> see the secret, for example "Harry Kane".</li>
+          <li><b>The imposter</b> only sees "You're the imposter". They don't know the secret.</li></ul></section>
+        <section><h3>3. Say a word</h3>
+          <p>Going round in the order on screen, each player says <b>one word</b> out loud that's linked to the secret. Play ${S.rounds} rounds (you can change this on the setup screen).</p>
+          <p>Safe players want to prove they know the secret without making it obvious. The imposter listens to everyone's words, works out what the secret might be, and tries to blend in.</p></section>
+        <section><h3>4. Vote</h3>
+          <p>Everyone takes a turn to say out loud who they think the imposter is, and taps that name. You can't vote for yourself.</p>
+          <ul><li>The player with the <b>most votes</b> is accused.</li>
+          <li>If it's a <b>tie</b>, everyone votes again, only between the tied players. If it's still tied, nobody is accused and the imposter wins.</li></ul></section>
+        <section><h3>5. The imposter's last chance</h3>
+          <p>If the accused player is the imposter, they get <b>one guess</b> at the secret, out loud. The game then shows the answer and the group taps whether they got it right.</p></section>
+        <section><h3>Who wins</h3>
+          <ul><li><b>Safe players win</b> if they catch the imposter and the imposter guesses wrong.</li>
+          <li><b>The imposter wins</b> if they aren't caught, if the vote stays tied, or if they're caught but name the secret.</li></ul>
+          <p>The "Wins tonight" table keeps score across games.</p></section>
+        <section><h3>Tips</h3>
+          <ul><li>Safe players: pick words that only make sense if you know the answer. Too obvious and you hand the imposter the win.</li>
+          <li>Imposter: listen hard, go vague early, and act confident.</li>
+          <li>Speaking first as the imposter is unlucky. That's the game!</li></ul></section>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" data-act="to-setup">Set up a game</button>
+      <button class="btn ghost" data-act="home">Back</button>
     </section>`;
   },
 
@@ -1340,6 +1389,7 @@ document.addEventListener("click", e => {
   switch (act) {
     case "sound": sound.on = !sound.on; store.set("sound", sound.on); render(); break;
     case "home": go("home"); break;
+    case "howto": go("howto"); break;
     case "to-setup": go("setup"); setTimeout(() => { const i = $("#name-input"); if (i && S.players.length < MIN_PLAYERS) i.focus(); }, 50); break;
     case "add-name": addName(); break;
     case "remove": S.players.splice(+el.dataset.i, 1); save(); render({ focusName: true }); break;
