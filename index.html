@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1d1e22">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<title>Imposter</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap">
+<style>
+/* Layout: one centred phone-width column; neutral graphite by default, each category swaps in its own theme (football = striped pitch). */
+:root {
+  --bg: #1d1e22;
+  --bg-image: radial-gradient(120% 60% at 50% 0%, #26272c 0%, #1d1e22 70%);
+  --panel: rgba(0, 0, 0, .22);
+  --card-sub: #5b5d66;
+  --chalk: #f3f1e8;
+  --chalk-dim: rgba(243, 241, 232, .68);
+  --chalk-faint: rgba(243, 241, 232, .14);
+  --yellow: #f6c90e;
+  --red: #e23b2e;
+  --ink: #121316;
+  --card: #f3f1e8;
+  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-label: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background-color: var(--bg);
+  background-image: var(--bg-image);
+  transition: background-color .4s ease;
+  color: var(--chalk);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+}
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font-family: var(--font-display); font-weight: 900; font-size: 22px; letter-spacing: .04em; text-transform: uppercase; }
+.brand span { color: var(--red); }
+.icon-btn {
+  background: transparent; border: 1.5px solid var(--chalk-faint); color: var(--chalk);
+  border-radius: 999px; padding: 6px 12px; font: 600 14px var(--font-label); letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+}
+.screen { display: flex; flex-direction: column; gap: 18px; flex: 1; animation: rise .35s ease both; }
+@keyframes rise { from { opacity: .001; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.eyebrow { font: 700 14px var(--font-label); letter-spacing: .14em; text-transform: uppercase; color: var(--yellow); margin: 0; }
+h1, h2 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: .92; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(64px, 22vw, 108px); letter-spacing: .01em; }
+h2 { font-size: clamp(38px, 11vw, 54px); }
+p { margin: 0; }
+.lede { color: var(--chalk-dim); font-size: 18px; max-width: 34ch; }
+.muted { color: var(--chalk-dim); }
+.spacer { flex: 1; }
+
+.btn {
+  display: block; width: 100%; box-sizing: border-box; border: 0; border-radius: 14px; cursor: pointer;
+  padding: 17px 20px; font: 700 20px var(--font-label); letter-spacing: .08em; text-transform: uppercase;
+  background: var(--yellow); color: var(--ink); transition: transform .08s ease, filter .15s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn:disabled { filter: grayscale(1) brightness(.6); cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--chalk); border: 2px solid var(--chalk-faint); }
+.btn.red { background: var(--red); color: var(--chalk); }
+.btn.light { background: var(--chalk); color: var(--ink); }
+.btn-row { display: flex; gap: 10px; }
+.btn-row .btn { flex: 1; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+/* Home */
+.hero-mark { display: flex; gap: 8px; align-items: center; }
+.mini-card { width: 22px; height: 30px; border-radius: 3px; transform: rotate(-8deg); }
+.mini-card.y { background: var(--yellow); }
+.mini-card.r { background: var(--red); transform: rotate(6deg); }
+.rules { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; counter-reset: step; }
+.rules li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; color: var(--chalk-dim); }
+.rules li::before {
+  counter-increment: step; content: counter(step);
+  font: 900 22px/1 var(--font-display); color: var(--chalk); border-bottom: 2px solid var(--yellow); padding-bottom: 2px; text-align: center;
+}
+.rules b { color: var(--chalk); font-weight: 600; }
+
+/* Setup */
+.panel { background: var(--panel); border: 1.5px solid var(--chalk-faint); border-radius: 16px; padding: 16px; display: grid; gap: 12px; }
+.panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.label { font: 700 14px var(--font-label); letter-spacing: .12em; text-transform: uppercase; color: var(--chalk-dim); }
+.players { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.players li { display: flex; align-items: center; gap: 10px; background: var(--chalk-faint); border-radius: 10px; padding: 10px 10px 10px 14px; }
+.players .num { font: 900 18px var(--font-display); color: var(--yellow); width: 22px; font-variant-numeric: tabular-nums; }
+.players .pname { flex: 1; min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
+.remove { background: transparent; border: 0; color: var(--chalk-dim); font-size: 22px; line-height: 1; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.add-row { display: flex; gap: 8px; }
+.add-row input {
+  flex: 1; min-width: 0; font: 500 17px var(--font-body); padding: 12px 14px; border-radius: 10px;
+  border: 1.5px solid var(--chalk-faint); background: var(--ink); color: var(--chalk);
+}
+.add-row button { flex: none; width: auto; padding: 12px 18px; font-size: 17px; border-radius: 10px; }
+.hint { font-size: 14px; color: var(--chalk-dim); }
+.hint.warn { color: var(--yellow); }
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.cat-tile {
+  display: grid; gap: 4px; text-align: left; cursor: pointer; padding: 14px; border-radius: 12px;
+  background: var(--chalk-faint); color: var(--chalk); border: 2px solid transparent; font: inherit;
+}
+.cat-tile .t { font: 900 24px/1 var(--font-display); text-transform: uppercase; }
+.cat-tile .c { font-size: 14px; color: var(--chalk-dim); }
+.cat-tile[aria-pressed="true"] { border-color: var(--yellow); background: var(--panel); }
+select {
+  font: 600 17px var(--font-body); padding: 12px 14px; border-radius: 10px; width: 100%;
+  border: 1.5px solid var(--chalk-faint); background: var(--ink); color: var(--chalk);
+}
+.stepper { display: flex; align-items: center; gap: 14px; }
+.stepper button { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--chalk-faint); background: transparent; color: var(--chalk); font-size: 22px; cursor: pointer; }
+.stepper output { font: 900 32px var(--font-display); min-width: 28px; text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Reveal */
+.pass { text-align: center; align-items: center; justify-content: center; }
+.pass .who { font-family: var(--font-display); font-weight: 900; font-size: clamp(52px, 16vw, 84px); text-transform: uppercase; line-height: .95; overflow-wrap: anywhere; }
+.progress-dots { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.progress-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--chalk-faint); }
+.progress-dots i.done { background: var(--yellow); }
+.flip { perspective: 1200px; width: min(300px, 78vw); aspect-ratio: 5 / 7; max-width: 100%; margin: 0 auto; }
+.flip-inner { position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2, .8, .2, 1); transform-style: preserve-3d; }
+.flip.on .flip-inner { transform: rotateY(180deg); }
+.face {
+  position: absolute; inset: 0; border-radius: 18px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 22px; box-sizing: border-box; text-align: center;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .35);
+}
+.face.back { background: var(--ink); border: 2px solid var(--chalk-faint); }
+.face.back .q { font: 900 120px/1 var(--font-display); color: var(--yellow); }
+.face.front { transform: rotateY(180deg); }
+.face.safe { background: var(--card); color: var(--ink); }
+.face.safe .tag { font: 700 14px var(--font-label); letter-spacing: .14em; text-transform: uppercase; color: var(--card-sub); }
+.face.safe .secret { font: 900 clamp(40px, 12vw, 54px)/.95 var(--font-display); text-transform: uppercase; overflow-wrap: anywhere; }
+.face.safe .cat { font-size: 15px; color: var(--card-sub); }
+.face.imp { background: var(--red); color: var(--chalk); }
+.face.imp .secret { font: 900 clamp(44px, 13vw, 60px)/.92 var(--font-display); text-transform: uppercase; }
+.face.imp .tag { font: 700 14px var(--font-label); letter-spacing: .14em; text-transform: uppercase; }
+
+/* Clues */
+.round-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; }
+.round-pips { display: flex; gap: 6px; }
+.round-pips i { width: 26px; height: 8px; border-radius: 4px; background: var(--chalk-faint); }
+.round-pips i.done { background: var(--yellow); }
+.round-pips i.now { background: var(--chalk); }
+.speaker { background: var(--chalk); color: var(--ink); border-radius: 18px; padding: 22px 20px; display: grid; gap: 6px; }
+.speaker .label { color: var(--card-sub); }
+.speaker .who { font: 900 clamp(46px, 14vw, 68px)/.95 var(--font-display); text-transform: uppercase; overflow-wrap: anywhere; }
+.order { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.order li { display: flex; gap: 12px; align-items: center; padding: 8px 12px; border-radius: 10px; color: var(--chalk-dim); }
+.order li.now { background: var(--chalk-faint); color: var(--chalk); font-weight: 600; }
+.order li.done { text-decoration: line-through; text-decoration-color: var(--chalk-faint); }
+.order .n { font: 900 16px var(--font-display); width: 18px; color: var(--yellow); font-variant-numeric: tabular-nums; }
+.text-link { background: none; border: 0; color: var(--chalk-dim); text-decoration: underline; text-underline-offset: 3px; font: 500 15px var(--font-body); cursor: pointer; padding: 8px; align-self: center; }
+
+/* Vote */
+.choices { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.choice {
+  background: var(--chalk-faint); color: var(--chalk); border: 2px solid transparent; border-radius: 14px; padding: 16px 12px;
+  font: 700 19px var(--font-body); cursor: pointer; overflow-wrap: anywhere; text-align: center;
+}
+.choice:active { border-color: var(--yellow); }
+.tally { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.tally li { display: grid; grid-template-columns: minmax(0, 7.5em) 1fr 2ch; gap: 10px; align-items: center; }
+.tally .nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tally .bar { height: 14px; border-radius: 7px; background: var(--chalk-faint); overflow: hidden; }
+.tally .bar span { display: block; height: 100%; background: var(--yellow); border-radius: 7px; transform-origin: left; animation: grow .6s ease both; }
+.tally li.top .bar span { background: var(--red); }
+.tally .ct { font: 900 20px var(--font-display); text-align: right; font-variant-numeric: tabular-nums; }
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Result */
+.verdict { border-radius: 20px; padding: 24px 20px; display: grid; gap: 10px; text-align: center; }
+.verdict.imp-win { background: var(--red); color: var(--chalk); }
+.verdict.safe-win { background: var(--chalk); color: var(--ink); }
+.verdict .big { font: 900 clamp(46px, 14vw, 66px)/.92 var(--font-display); text-transform: uppercase; }
+.stamp { animation: stamp .5s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes stamp { from { transform: scale(1.4) rotate(-4deg); opacity: .001; } to { transform: none; opacity: 1; } }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: baseline; }
+.facts dt { font: 700 13px var(--font-label); letter-spacing: .12em; text-transform: uppercase; color: var(--chalk-dim); }
+.facts dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.table { width: 100%; border-collapse: collapse; }
+.table td { padding: 8px 4px; border-bottom: 1px solid var(--chalk-faint); }
+.table td:last-child { text-align: right; font: 900 20px var(--font-display); font-variant-numeric: tabular-nums; }
+.answer-card { background: var(--chalk); color: var(--ink); border-radius: 18px; padding: 22px; text-align: center; display: grid; gap: 6px; }
+.answer-card .secret { font: 900 clamp(40px, 12vw, 56px)/.95 var(--font-display); text-transform: uppercase; overflow-wrap: anywhere; }
+
+/* Confirm overlay */
+.sheet-wrap { position: fixed; inset: 0; background: rgba(0, 0, 0, .65); display: flex; align-items: flex-end; justify-content: center; z-index: 20; padding-bottom: env(safe-area-inset-bottom, 0px); }
+.sheet { background: var(--ink); border: 1.5px solid var(--chalk-faint); border-radius: 18px 18px 0 0; width: 100%; max-width: 480px; box-sizing: border-box; padding: 22px max(16px, env(safe-area-inset-right, 0px)) 22px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 14px; }
+
+/* Host */
+.host { display: flex; gap: 10px; align-items: flex-end; text-align: left; width: 100%; }
+.host-fig { width: 96px; flex: none; animation: bob 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+.host-fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+.host .arm-up { transform-origin: 78px 96px; animation: raise .5s cubic-bezier(.2, 1.4, .4, 1) .15s both; }
+.bubble {
+  position: relative; flex: 1; min-width: 0; margin-bottom: 22px;
+  background: var(--chalk); color: var(--ink); border-radius: 16px; padding: 10px 14px 12px;
+  font-size: 16px; font-weight: 500; line-height: 1.35; animation: pop .35s cubic-bezier(.2, 1.3, .4, 1) both;
+}
+.bubble::before {
+  content: ""; position: absolute; left: -8px; bottom: 14px;
+  border-style: solid; border-width: 7px 10px 7px 0; border-color: transparent var(--chalk) transparent transparent;
+}
+.bubble .host-name { display: block; font: 700 12px var(--font-label); letter-spacing: .14em; text-transform: uppercase; color: var(--card-sub); margin-bottom: 2px; }
+.bubble b { font-weight: 700; }
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-1.5deg); } }
+@keyframes pop { from { opacity: .001; transform: scale(.85) translateX(-6px); } to { opacity: 1; transform: none; } }
+@keyframes raise { from { transform: rotate(60deg); } to { transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001s !important; transition-duration: .001s !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+/* =====================================================================
+   CATEGORIES — add new categories here.
+   Each category needs:
+     label  – shown on the category picker
+     noun   – what one item is called ("the secret footballer")
+     host   – optional game host from HOSTS below (default: "presenter")
+     theme  – optional look for the game once this category is picked
+              (bg colour, bgImage CSS background, panel tint, ink, cardSub)
+     items  – the list; one is picked at random as the secret each game
+   Example of adding another:
+     films: { label: "Films", noun: "film",
+              theme: { bg: "#2a0f14", bgImage: "none" },
+              items: ["Titanic", "Jaws", ...] },
+   ===================================================================== */
+const CATEGORIES = {
+  footballers: {
+    label: "Footballers",
+    noun: "footballer",
+    host: "referee",
+    theme: {
+      bg: "#0d3b2c",
+      bgImage: "repeating-linear-gradient(180deg, #0d3b2c 0 64px, #10432f 64px 128px)",
+      panel: "rgba(10, 31, 24, .55)",
+      ink: "#0a1f18",
+      cardSub: "#3c5a4c"
+    },
+    items: [
+      "Lionel Messi", "Cristiano Ronaldo", "Kylian Mbappé", "Erling Haaland", "Mohamed Salah",
+      "Harry Kane", "Jude Bellingham", "Kevin De Bruyne", "Virgil van Dijk", "Bukayo Saka",
+      "Phil Foden", "Marcus Rashford", "Bruno Fernandes", "Son Heung-min", "Vinícius Júnior",
+      "Robert Lewandowski", "Neymar", "Luka Modrić", "Karim Benzema", "Martin Ødegaard",
+      "Declan Rice", "Trent Alexander-Arnold", "Rodri", "Lamine Yamal", "Pedri",
+      "Cole Palmer", "Jack Grealish", "Alisson", "Thibaut Courtois", "Jordan Pickford",
+      "Raheem Sterling", "Antoine Griezmann", "Jamal Musiala", "Florian Wirtz", "Gabriel Jesus",
+      "Ollie Watkins", "Jarrod Bowen", "Alexander Isak", "Bruno Guimarães", "Darwin Núñez",
+      "Luis Díaz", "Rúben Dias", "Kyle Walker", "John Stones", "Jordan Henderson",
+      "Mason Mount", "Kai Havertz", "Gabriel Martinelli", "William Saliba", "Rasmus Højlund",
+      "Casemiro", "Andy Robertson", "Ederson", "Bernardo Silva", "Federico Valverde",
+      "Toni Kroos", "Thomas Müller", "Manuel Neuer", "Zlatan Ibrahimović", "Gareth Bale",
+      "David Beckham", "Wayne Rooney", "Steven Gerrard", "Frank Lampard", "Thierry Henry",
+      "Alan Shearer", "Paul Scholes", "Ryan Giggs", "Rio Ferdinand", "John Terry",
+      "Didier Drogba", "Sergio Agüero", "Vincent Kompany", "Yaya Touré", "Luis Suárez",
+      "Fernando Torres", "Michael Owen", "Peter Crouch", "Jamie Vardy", "Gary Lineker",
+      "Paul Gascoigne", "Eric Cantona", "Roy Keane", "Peter Schmeichel", "Patrick Vieira",
+      "Dennis Bergkamp", "Cesc Fàbregas", "Robin van Persie", "Eden Hazard", "Kaká",
+      "Ronaldinho", "Ronaldo Nazário", "Zinedine Zidane", "Andrea Pirlo", "Xavi",
+      "Andrés Iniesta", "Sergio Ramos", "Gerard Piqué", "Paolo Maldini", "Gianluigi Buffon",
+      "Pelé", "Diego Maradona", "Johan Cruyff", "Franz Beckenbauer", "George Best",
+      "Bobby Charlton", "Bobby Moore", "Kenny Dalglish", "Ian Wright", "Jermain Defoe",
+      "Harry Maguire", "Jesse Lingard", "Dele Alli", "Raphinha", "Riyad Mahrez",
+      "Sadio Mané", "N'Golo Kanté", "Paul Pogba", "Olivier Giroud", "Romelu Lukaku",
+      "Christian Pulisic", "Achraf Hakimi", "Victor Osimhen", "Khvicha Kvaratskhelia", "Ousmane Dembélé"
+    ]
+  }
+};
+const DEFAULT_ROUNDS = 3;
+const MIN_PLAYERS = 3;
+
+/* ---------- storage (per-device convenience only) ---------- */
+const store = {
+  get(k, fallback) { try { const v = localStorage.getItem("imposter:" + k); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } },
+  set(k, v) { try { localStorage.setItem("imposter:" + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- sound (Web Audio, starts after first tap) ---------- */
+const sound = {
+  on: store.get("sound", true),
+  ctx: null,
+  ensure() { if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (this.ctx && this.ctx.state === "suspended") this.ctx.resume(); return this.ctx; },
+  tone(freq, start, dur, type = "sine", vol = .18) {
+    const c = this.ensure(); if (!c || !this.on) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0, c.currentTime + start);
+    g.gain.linearRampToValueAtTime(vol, c.currentTime + start + .01);
+    g.gain.exponentialRampToValueAtTime(.0001, c.currentTime + start + dur);
+    o.connect(g).connect(c.destination); o.start(c.currentTime + start); o.stop(c.currentTime + start + dur + .05);
+    return o;
+  },
+  tap() { this.tone(660, 0, .06, "triangle", .08); },
+  whistle(len = .5) {
+    const c = this.ensure(); if (!c || !this.on) return;
+    const o = c.createOscillator(), lfo = c.createOscillator(), lg = c.createGain(), g = c.createGain();
+    o.type = "sine"; o.frequency.value = 2900; lfo.frequency.value = 38; lg.gain.value = 140;
+    lfo.connect(lg).connect(o.frequency);
+    g.gain.setValueAtTime(0, c.currentTime); g.gain.linearRampToValueAtTime(.12, c.currentTime + .02);
+    g.gain.setValueAtTime(.12, c.currentTime + len - .05); g.gain.linearRampToValueAtTime(0, c.currentTime + len);
+    o.connect(g).connect(c.destination); o.start(); lfo.start(); o.stop(c.currentTime + len + .05); lfo.stop(c.currentTime + len + .05);
+  },
+  reveal(imp) {
+    if (imp) { this.tone(220, 0, .35, "sawtooth", .12); this.tone(207, .18, .5, "sawtooth", .12); }
+    else { this.tone(523, 0, .14, "triangle"); this.tone(784, .1, .22, "triangle"); }
+  },
+  win() { [523, 659, 784, 1047].forEach((f, i) => this.tone(f, i * .11, .3, "triangle", .16)); },
+  lose() { [392, 330, 262].forEach((f, i) => this.tone(f, i * .16, .35, "square", .07)); }
+};
+
+/* ---------- state ---------- */
+let S = {
+  screen: "home",
+  players: store.get("players", []),
+  category: null,
+  rounds: store.get("rounds", DEFAULT_ROUNDS),
+  scores: store.get("scores", {}),
+  used: store.get("used", {}),
+  game: null
+};
+
+function save() {
+  store.set("players", S.players); store.set("rounds", S.rounds);
+  store.set("scores", S.scores); store.set("used", S.used);
+}
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const rand = n => Math.floor(Math.random() * n);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function go(screen) { S.screen = screen; render(); window.scrollTo(0, 0); }
+
+/* ---------- game logic ---------- */
+function pickSecret(catKey) {
+  const items = [...new Set(CATEGORIES[catKey].items)];
+  let used = S.used[catKey] || [];
+  let pool = items.filter(x => !used.includes(x));
+  if (!pool.length) { used = []; pool = items; }
+  const secret = pool[rand(pool.length)];
+  S.used[catKey] = [...used, secret];
+  return secret;
+}
+
+function newGame() {
+  const players = S.players.slice();
+  const imposter = rand(players.length);
+  // Speaking order: fully random (the imposter can go first).
+  const order = shuffle(players.map((_, i) => i));
+  S.game = {
+    players, imposter, secret: pickSecret(S.category), category: S.category,
+    revealIdx: 0, revealOpen: false,
+    order, round: 1, turn: 0,
+    voteIdx: 0, votes: [], candidates: players.map((_, i) => i), revote: false,
+    accused: null, outcome: null, guessed: null
+  };
+  save();
+  go("pass");
+}
+
+function tallyVotes() {
+  const g = S.game, counts = {};
+  g.candidates.forEach(i => counts[i] = 0);
+  g.votes.forEach(v => counts[v]++);
+  const max = Math.max(...Object.values(counts));
+  const top = Object.keys(counts).filter(k => counts[k] === max).map(Number);
+  return { counts, max, top };
+}
+
+function finish(outcome) {
+  const g = S.game; g.outcome = outcome;
+  const winners = outcome === "safe" ? g.players.filter((_, i) => i !== g.imposter) : [g.players[g.imposter]];
+  g.players.forEach(p => { if (!(p in S.scores)) S.scores[p] = 0; });
+  winners.forEach(p => S.scores[p]++);
+  save();
+  outcome === "safe" ? sound.win() : sound.lose();
+  go("result");
+}
+
+/* ---------- category theming ---------- */
+const THEME_KEYS = { bg: "--bg", bgImage: "--bg-image", panel: "--panel", ink: "--ink", cardSub: "--card-sub" };
+function activeCategory() {
+  if (S.screen === "home") return null;
+  const key = S.game ? S.game.category : S.category;
+  return key && CATEGORIES[key] ? CATEGORIES[key] : null;
+}
+function applyTheme() {
+  const theme = (activeCategory() || {}).theme || {};
+  const root = document.documentElement.style;
+  for (const [k, v] of Object.entries(THEME_KEYS)) theme[k] ? root.setProperty(v, theme[k]) : root.removeProperty(v);
+}
+const noun = () => (S.game && CATEGORIES[S.game.category].noun) || "secret";
+
+/* =====================================================================
+   HOSTS — the cartoon character who runs the game for each category.
+   Add a new host by giving it a name, a draw(pose) function returning
+   SVG, and any lines you want to change (missing lines use the
+   presenter's). pose is "talk" or "card" (big moments).
+   ===================================================================== */
+const SKIN = "#f2c39b", SKIN_SHADE = "#e3a97f", HAIR = "#3a2a20";
+function headSVG(face) {
+  return `<rect x="44" y="72" width="12" height="14" fill="${SKIN_SHADE}"/>
+    <circle cx="26" cy="54" r="5.5" fill="${SKIN_SHADE}"/><circle cx="74" cy="54" r="5.5" fill="${SKIN_SHADE}"/>
+    <ellipse cx="50" cy="51" rx="24" ry="27" fill="${SKIN}"/>
+    <circle cx="41" cy="53" r="3.2" fill="#1b1b1b"/><circle cx="59" cy="53" r="3.2" fill="#1b1b1b"/>
+    <circle cx="42" cy="52" r="1" fill="#fff"/><circle cx="60" cy="52" r="1" fill="#fff"/>
+    <path d="M50 54 Q54 60 49 62" stroke="#c98b63" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="34" cy="62" rx="4" ry="2.5" fill="#f0a08a" opacity=".55"/><ellipse cx="66" cy="62" rx="4" ry="2.5" fill="#f0a08a" opacity=".55"/>
+    ${face}`;
+}
+const HOSTS = {
+  presenter: {
+    name: "Your host",
+    draw(pose) {
+      const arm = pose === "card"
+        ? `<g class="arm-up"><path d="M76 98 L92 64" stroke="#3b3e47" stroke-width="10" stroke-linecap="round"/><circle cx="93" cy="60" r="5.5" fill="${SKIN}"/>
+           <rect x="89" y="30" width="16" height="22" rx="2" fill="#e23b2e" transform="rotate(14 97 41)"/><text x="97" y="45" font-size="13" font-weight="900" fill="#f3f1e8" text-anchor="middle" transform="rotate(14 97 41)">!</text></g>`
+        : `<path d="M78 100 Q88 96 86 86" stroke="#3b3e47" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="85" cy="84" r="5.5" fill="${SKIN}"/>
+           <rect x="82" y="66" width="6" height="16" rx="2" fill="#17181b"/><circle cx="85" cy="64" r="6" fill="#9aa0aa"/>`;
+      return `<svg viewBox="0 0 110 122" aria-hidden="true">
+        <path d="M16 122 C16 94 30 84 50 84 C70 84 84 94 84 122Z" fill="#3b3e47"/>
+        <path d="M40 84 L50 106 L60 84Z" fill="#f3f1e8"/>
+        <path d="M40 84 L50 106 L36 92Z M60 84 L50 106 L64 92Z" fill="#2e3038"/>
+        <path d="M42 87 L50 91 L42 95Z M58 87 L50 91 L58 95Z" fill="#e23b2e"/><circle cx="50" cy="91" r="2.4" fill="#b92d22"/>
+        ${headSVG(`<path d="M26 50 Q22 22 50 21 Q78 21 75 46 Q68 30 50 32 Q36 32 26 50Z" fill="#2a2522"/>
+          <path d="M35 45 Q41 41 46 44" stroke="#2a2522" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <path d="M54 44 Q59 41 65 45" stroke="#2a2522" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <path d="M40 66 Q50 77 60 66 Z" fill="#7a3b2e"/><path d="M43 67 L57 67" stroke="#fff" stroke-width="2"/>`)}
+        ${arm}
+      </svg>`;
+    },
+    lines: {
+      home: () => `Evening, everyone! I'm your host. Get <b>three or more</b> of you round one phone and let's find a liar.`,
+      setupEmpty: () => `Add everyone who's playing, then pick a category. Each one has its own host.`,
+      setupReady: c => `Lovely. I'll hand you over to the expert for ${esc(c.label.toLowerCase())}.`,
+      pass: () => `Hand it over. Everyone else, eyes off the screen!`,
+      clues1: () => `One word each, out loud. Too obvious and the imposter catches on. Too vague and you look guilty.`,
+      cluesN: r => `Round ${r}. Listen closely, someone's bluffing.`,
+      vote: () => `Point the finger, one at a time. Say it out loud.`,
+      tallyTop: () => `The votes are in!`,
+      tallyTie: () => `Ooh, a tie!`,
+      tallyHung: () => `Deadlock!`,
+      caught: (imp, n) => `Got you, <b>${imp}</b>! One chance to save yourself. Which ${n} were they describing?`,
+      safe: () => `Well played, everyone. Honesty wins tonight!`,
+      imposter: imp => `Sneaky! <b>${imp}</b> pulled it off.`
+    }
+  },
+  referee: {
+    name: "The Ref",
+    draw(pose) {
+      const arm = pose === "card"
+        ? `<g class="arm-up"><path d="M76 98 L92 64" stroke="#17181b" stroke-width="10" stroke-linecap="round"/><circle cx="93" cy="60" r="5.5" fill="${SKIN}"/>
+           <rect x="88" y="28" width="16" height="23" rx="2" fill="#e23b2e" transform="rotate(14 96 40)"/></g>`
+        : `<path d="M78 100 Q88 100 88 90" stroke="#17181b" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="88" cy="87" r="5.5" fill="${SKIN}"/>`;
+      return `<svg viewBox="0 0 110 122" aria-hidden="true">
+        <path d="M16 122 C16 94 30 84 50 84 C70 84 84 94 84 122Z" fill="#17181b"/>
+        <path d="M38 85 L50 97 L62 85" fill="none" stroke="#f3f1e8" stroke-width="4" stroke-linejoin="round"/>
+        <rect x="24" y="104" width="10" height="7" rx="1.5" fill="#f6c90e"/>
+        <path d="M44 90 Q50 106 56 90" stroke="#e23b2e" stroke-width="1.6" fill="none"/>
+        <rect x="46" y="102" width="10" height="5.5" rx="2.5" fill="#c9ccd2"/><circle cx="56" cy="104.7" r="2.4" fill="#c9ccd2"/>
+        ${headSVG(`<path d="M27 50 Q25 36 32 30" stroke="${HAIR}" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M73 50 Q75 36 68 30" stroke="${HAIR}" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M42 30 Q50 27 58 30" stroke="${HAIR}" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/>
+          <path d="M35 44 L46 47.5" stroke="${HAIR}" stroke-width="3.4" stroke-linecap="round"/>
+          <path d="M65 44 L54 47.5" stroke="${HAIR}" stroke-width="3.4" stroke-linecap="round"/>
+          <path d="M39 66 Q45 61 50 64.5 Q55 61 61 66 Q55 69.5 50 67.5 Q45 69.5 39 66Z" fill="${HAIR}"/>
+          <path d="M45 72 Q50 74.5 55 72" stroke="#7a3b2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>`)}
+        ${arm}
+      </svg>`;
+    },
+    lines: {
+      setupEmpty: () => `Right, line-ups please. I need at least three players on the pitch.`,
+      setupReady: () => `Line-ups confirmed. Boots on, phones out. Kick off when you're ready.`,
+      pass: () => `Pass it on. Anyone caught peeking gets booked!`,
+      clues1: () => `One word each. Keep it clean. Give away too much and the imposter is through on goal.`,
+      cluesN: r => `Round ${r}. I'm watching every touch.`,
+      vote: () => `Decision time. Point out the cheat, one at a time.`,
+      tallyTop: () => `The decision stands!`,
+      tallyTie: () => `Level on votes! We're going to extra time.`,
+      tallyHung: () => `Still level after extra time. I've got to blow up.`,
+      caught: (imp, n) => `Straight red, <b>${imp}</b>! One shot to stay on. Name the ${n}.`,
+      safe: () => `Full time! Fair play wins the day.`,
+      imposter: imp => `Full time! <b>${imp}</b> got away with a dive there.`
+    }
+  }
+};
+
+function host(key, args = [], { pose = "talk", extra = "" } = {}) {
+  const cat = activeCategory();
+  const h = HOSTS[(cat && cat.host) || "presenter"] || HOSTS.presenter;
+  const fn = h.lines[key] || HOSTS.presenter.lines[key];
+  const text = fn ? fn(...args) : "";
+  return `<div class="host"><div class="host-fig">${h.draw(pose)}</div>
+    <p class="bubble" aria-live="polite"><span class="host-name">${esc(h.name)}</span>${text}${extra ? " " + extra : ""}</p></div>`;
+}
+
+/* ---------- views ---------- */
+function topbar(extra = "") {
+  return `<div class="topbar"><div class="brand">Imp<span>o</span>ster</div>
+    <div style="display:flex;gap:8px">${extra}<button class="icon-btn" data-act="sound" aria-pressed="${sound.on}">${sound.on ? "Sound on" : "Sound off"}</button></div></div>`;
+}
+const quitBtn = `<button class="icon-btn" data-act="quit">Quit</button>`;
+
+const views = {
+  home() {
+    return `${topbar()}
+    <section class="screen">
+      <h1>Imp<span style="color:var(--red)">o</span>ster</h1>
+      <p class="lede">One phone, one secret, one liar. Pick a category, pass the phone round, say a word each, then find who's bluffing.</p>
+      ${host("home")}
+      <ol class="rules">
+        <li><span><b>Everyone sees the secret</b> except one player, who only learns they're the imposter.</span></li>
+        <li><span><b>Take turns saying one word</b> linked to the secret. ${S.rounds} rounds, out loud.</span></li>
+        <li><span><b>Vote one by one</b> for who you think the imposter is. Most votes is accused.</span></li>
+        <li><span><b>Caught?</b> The imposter gets one guess at the secret. Right guess steals the win.</span></li>
+      </ol>
+      <div class="spacer"></div>
+      <button class="btn" data-act="to-setup">Set up a game</button>
+    </section>`;
+  },
+
+  setup() {
+    const n = S.players.length;
+    const cats = Object.entries(CATEGORIES).map(([k, c]) => `<button class="cat-tile" data-act="cat" data-k="${k}" aria-pressed="${k === S.category}"><span class="t">${esc(c.label)}</span><span class="c">${new Set(c.items).size} to guess</span></button>`).join("");
+    const ready = n >= MIN_PLAYERS && S.category;
+    return `${topbar()}
+    <section class="screen">
+      <div><p class="eyebrow">New game</p><h2>Who's playing?</h2></div>
+      ${S.category && n >= MIN_PLAYERS ? host("setupReady", [CATEGORIES[S.category]]) : host("setupEmpty")}
+      <div class="panel">
+        <div class="panel-head"><span class="label">Players</span><span class="label" style="font-variant-numeric:tabular-nums">${n}</span></div>
+        ${n ? `<ol class="players">${S.players.map((p, i) => `<li><span class="num">${i + 1}</span><span class="pname">${esc(p)}</span><button class="remove" data-act="remove" data-i="${i}" aria-label="Remove ${esc(p)}">×</button></li>`).join("")}</ol>` : ""}
+        <form class="add-row" id="add-form" autocomplete="off">
+          <input id="name-input" maxlength="20" placeholder="Add a name" aria-label="Player name" enterkeyhint="done">
+          <button class="btn light" type="button" data-act="add-name">Add</button>
+        </form>
+        <p class="hint ${n < MIN_PLAYERS ? "warn" : ""}" id="name-hint">${n < MIN_PLAYERS ? `Add at least ${MIN_PLAYERS - n} more player${MIN_PLAYERS - n === 1 ? "" : "s"}.` : "Order doesn't matter. The game shuffles who speaks first."}</p>
+      </div>
+      <div class="panel">
+        <span class="label">Category</span>
+        <div class="cat-grid">${cats}</div>
+        ${S.category ? "" : `<p class="hint">Pick what the secret will be.</p>`}
+      </div>
+      <div class="panel">
+        <span class="label">Word rounds</span>
+        <div class="stepper">
+          <button data-act="rounds" data-d="-1" aria-label="Fewer rounds">−</button>
+          <output id="rounds-out">${S.rounds}</output>
+          <button data-act="rounds" data-d="1" aria-label="More rounds">+</button>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn ghost" data-act="home">Back</button>
+        <button class="btn" data-act="start" aria-disabled="${!ready}" ${ready ? "" : 'style="opacity:.55"'}>${ready ? (S.category === "footballers" ? "Kick off" : "Start") : n < MIN_PLAYERS ? `Add ${MIN_PLAYERS - n} more player${MIN_PLAYERS - n === 1 ? "" : "s"}` : "Pick a category"}</button>
+      </div>
+    </section>`;
+  },
+
+  pass() {
+    const g = S.game, name = g.players[g.revealIdx];
+    const dots = g.players.map((_, i) => `<i class="${i < g.revealIdx ? "done" : ""}"></i>`).join("");
+    if (!g.revealOpen) {
+      return `${topbar(quitBtn)}
+      <section class="screen pass">
+        <div class="progress-dots" aria-label="${g.revealIdx} of ${g.players.length} have seen their card">${dots}</div>
+        <div class="spacer"></div>
+        <p class="eyebrow">Pass the phone to</p>
+        <div class="who">${esc(name)}</div>
+        ${host("pass")}
+        <div class="flip" aria-hidden="true"><div class="flip-inner"><div class="face back"><div class="q">?</div></div></div></div>
+        <div class="spacer"></div>
+        <button class="btn" data-act="open-card">I'm ${esc(name)}, show me</button>
+      </section>`;
+    }
+    const imp = g.revealIdx === g.imposter;
+    const last = g.revealIdx === g.players.length - 1;
+    const front = imp
+      ? `<div class="face front imp"><span class="tag">Your role</span><div class="secret">You're the imposter</div><p>Blend in. Listen to the clues and work out who it is.</p></div>`
+      : `<div class="face front safe"><span class="tag">The secret ${esc(noun())}</span><div class="secret">${esc(g.secret)}</div><p class="cat">You're safe. Find the imposter.</p></div>`;
+    return `${topbar(quitBtn)}
+    <section class="screen pass">
+      <div class="progress-dots">${dots}</div>
+      <div class="spacer"></div>
+      <p class="eyebrow">${esc(name)}, this is for you only</p>
+      <div class="flip" id="card"><div class="flip-inner"><div class="face back"><div class="q">?</div></div>${front}</div></div>
+      <div class="spacer"></div>
+      <button class="btn light" data-act="hide-card">${last ? "Hide it, everyone's ready" : "Hide it and pass on"}</button>
+    </section>`;
+  },
+
+  clues() {
+    const g = S.game, total = S.rounds;
+    const speakerIdx = g.order[g.turn];
+    const pips = Array.from({ length: total }, (_, i) => `<i class="${i + 1 < g.round ? "done" : i + 1 === g.round ? "now" : ""}"></i>`).join("");
+    const list = g.order.map((pi, k) => `<li class="${k < g.turn ? "done" : k === g.turn ? "now" : ""}"><span class="n">${k + 1}</span>${esc(g.players[pi])}</li>`).join("");
+    const lastTurn = g.turn === g.order.length - 1, lastRound = g.round === total;
+    return `${topbar(quitBtn)}
+    <section class="screen">
+      <div class="round-head">
+        <div><p class="eyebrow">Round ${g.round} of ${total}</p><h2>Say a word</h2></div>
+        <div class="round-pips" aria-hidden="true">${pips}</div>
+      </div>
+      ${g.round === 1 && g.turn === 0 ? host("clues1") : g.turn === 0 ? host("cluesN", [g.round]) : ""}
+      <div class="speaker"><span class="label">Your turn</span><div class="who">${esc(g.players[speakerIdx])}</div><p>One word linked to the ${esc(noun())}. Don't make it too obvious.</p></div>
+      <ol class="order">${list}</ol>
+      <div class="spacer"></div>
+      <button class="btn" data-act="next-turn">${lastTurn ? (lastRound ? "Time to vote" : `Start round ${g.round + 1}`) : "Said it, next player"}</button>
+      ${!(lastTurn && lastRound) ? `<button class="text-link" data-act="skip-vote">Skip to the vote</button>` : ""}
+    </section>`;
+  },
+
+  vote() {
+    const g = S.game, voter = g.voteIdx, name = g.players[voter];
+    const opts = g.candidates.filter(i => i !== voter);
+    return `${topbar(quitBtn)}
+    <section class="screen">
+      <div><p class="eyebrow">${g.revote ? "Tie-break vote" : "The vote"} · ${voter + 1} of ${g.players.length}</p>
+      <h2>${esc(name)}, who's the imposter?</h2></div>
+      ${voter === 0 && !g.revote ? host("vote") : ""}
+      <p class="muted">${g.revote ? "It was a tie. Vote again, only between the tied players." : "Say it out loud, then tap their name."}</p>
+      <div class="choices">${opts.map(i => `<button class="choice" data-act="cast" data-i="${i}">${esc(g.players[i])}</button>`).join("")}</div>
+    </section>`;
+  },
+
+  tally() {
+    const g = S.game, t = tallyVotes();
+    const max = Math.max(t.max, 1);
+    const rows = g.candidates.slice().sort((a, b) => t.counts[b] - t.counts[a])
+      .map(i => `<li class="${t.top.length === 1 && t.top[0] === i ? "top" : ""}"><span class="nm">${esc(g.players[i])}</span><span class="bar"><span style="width:${(t.counts[i] / max) * 100}%"></span></span><span class="ct">${t.counts[i]}</span></li>`).join("");
+    let msg, btn;
+    if (t.top.length === 1) {
+      msg = `<b>${esc(g.players[t.top[0]])}</b> has the most votes and is accused.`;
+      btn = `<button class="btn red" data-act="accuse" data-i="${t.top[0]}">Reveal ${esc(g.players[t.top[0]])}</button>`;
+    } else if (!g.revote) {
+      msg = `It's a tie between ${t.top.map(i => esc(g.players[i])).join(" and ")}. Everyone votes again, between them only.`;
+      btn = `<button class="btn" data-act="revote">Tie-break vote</button>`;
+    } else {
+      msg = `Still a tie. Nobody gets accused, so the imposter slips away.`;
+      btn = `<button class="btn red" data-act="hung">Reveal the imposter</button>`;
+    }
+    return `${topbar(quitBtn)}
+    <section class="screen">
+      <div><p class="eyebrow">${g.revote ? "Tie-break result" : "Votes are in"}</p><h2>The count</h2></div>
+      <ul class="tally">${rows}</ul>
+      ${host(t.top.length === 1 ? "tallyTop" : !g.revote ? "tallyTie" : "tallyHung", [], { extra: msg })}
+      <div class="spacer"></div>
+      ${btn}
+    </section>`;
+  },
+
+  caught() {
+    const g = S.game, imp = g.players[g.imposter];
+    if (g.guessed === null) {
+      return `${topbar(quitBtn)}
+      <section class="screen">
+        <div class="verdict imp-win stamp"><span class="eyebrow" style="color:var(--chalk)">Caught</span><div class="big">${esc(imp)} is the imposter</div></div>
+        ${host("caught", [esc(imp), esc(noun())], { pose: "card" })}
+        <div class="spacer"></div>
+        <button class="btn" data-act="show-answer">They've guessed, show the answer</button>
+      </section>`;
+    }
+    return `${topbar(quitBtn)}
+    <section class="screen">
+      <p class="eyebrow">The secret ${esc(noun())} was</p>
+      <div class="answer-card stamp"><div class="secret">${esc(g.secret)}</div></div>
+      <h2 style="font-size:clamp(30px,9vw,40px)">Did ${esc(imp)} get it right?</h2>
+      <div class="spacer"></div>
+      <div class="btn-row">
+        <button class="btn ghost" data-act="guess" data-ok="0">No</button>
+        <button class="btn red" data-act="guess" data-ok="1">Yes</button>
+      </div>
+    </section>`;
+  },
+
+  result() {
+    const g = S.game, imp = g.players[g.imposter];
+    const head = {
+      safe: ["Safe players win", `${esc(imp)} was caught and couldn't name the ${esc(noun())}.`],
+      wrong: ["Imposter wins", g.accused !== null ? `You accused ${esc(g.players[g.accused])}, but they were safe.` : ""],
+      hung: ["Imposter wins", "The vote stayed tied, so nobody was accused."],
+      guessed: ["Imposter wins", `${esc(imp)} was caught but named the ${esc(noun())}.`]
+    }[g.outcome];
+    const board = Object.entries(S.scores).filter(([p]) => S.players.includes(p)).sort((a, b) => b[1] - a[1])
+      .map(([p, s]) => `<tr><td>${esc(p)}</td><td>${s}</td></tr>`).join("");
+    return `${topbar()}
+    <section class="screen">
+      <div class="verdict ${g.outcome === "safe" ? "safe-win" : "imp-win"} stamp">
+        <div class="big">${head[0]}</div><p>${head[1]}</p>
+      </div>
+      ${g.outcome === "safe" ? host("safe") : host("imposter", [esc(imp)], { pose: "card" })}
+      <dl class="facts">
+        <dt>Imposter</dt><dd>${esc(imp)}</dd>
+        <dt>${esc(noun())}</dt><dd>${esc(g.secret)}</dd>
+      </dl>
+      <div class="panel">
+        <div class="panel-head"><span class="label">Wins tonight</span><button class="text-link" style="padding:0" data-act="reset-scores">Reset</button></div>
+        <table class="table"><tbody>${board}</tbody></table>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" data-act="again">Play again</button>
+      <button class="btn ghost" data-act="to-setup">Change players</button>
+    </section>`;
+  }
+};
+
+let confirmOpen = null;
+function render({ focusName = false } = {}) {
+  applyTheme();
+  const app = $("#app");
+  const oldInput = $("#name-input");
+  const typed = oldInput ? oldInput.value : "";
+  const hadFocus = oldInput && document.activeElement === oldInput;
+  app.innerHTML = views[S.screen]() + (confirmOpen ? `
+    <div class="sheet-wrap" data-act="cancel-sheet"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(confirmOpen.title)}">
+      <h2 style="font-size:34px">${esc(confirmOpen.title)}</h2><p class="muted">${esc(confirmOpen.body)}</p>
+      <div class="btn-row"><button class="btn ghost" data-act="cancel-sheet">Keep playing</button><button class="btn red" data-act="${confirmOpen.act}">${esc(confirmOpen.ok)}</button></div>
+    </div></div>` : "");
+  const newInput = $("#name-input");
+  if (newInput) {
+    if (typed) newInput.value = typed;
+    if (focusName || hadFocus) newInput.focus({ preventScroll: true });
+  }
+  if (S.screen === "pass" && S.game.revealOpen) {
+    requestAnimationFrame(() => requestAnimationFrame(() => { const c = $("#card"); if (c) c.classList.add("on"); }));
+  }
+}
+
+/* ---------- events ---------- */
+function addName() {
+  const input = $("#name-input"), hint = $("#name-hint");
+  if (!input) return;
+  const name = input.value.trim().replace(/\s+/g, " ");
+  if (!name) { hint.textContent = "Type a name first, then tap Add."; hint.className = "hint warn"; input.focus(); return; }
+  if (S.players.some(p => p.toLowerCase() === name.toLowerCase())) { hint.textContent = `${name} is already playing. Try a nickname.`; hint.className = "hint warn"; input.focus(); return; }
+  S.players.push(name); save(); sound.tap();
+  input.value = "";
+  render({ focusName: true });
+}
+document.addEventListener("submit", e => { e.preventDefault(); if (e.target.id === "add-form") addName(); });
+document.addEventListener("keydown", e => {
+  if (e.target.id === "name-input" && e.key === "Enter") { e.preventDefault(); addName(); }
+});
+
+document.addEventListener("change", e => {
+  if (e.target.id === "cat-select") S.category = e.target.value;
+});
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act]"); if (!el) return;
+  const act = el.dataset.act, g = S.game;
+  if (act === "cancel-sheet" && e.target.closest(".sheet") && el.classList.contains("sheet-wrap")) return;
+  sound.ensure();
+  switch (act) {
+    case "sound": sound.on = !sound.on; store.set("sound", sound.on); render(); break;
+    case "home": go("home"); break;
+    case "to-setup": go("setup"); setTimeout(() => { const i = $("#name-input"); if (i && S.players.length < MIN_PLAYERS) i.focus(); }, 50); break;
+    case "add-name": addName(); break;
+    case "remove": S.players.splice(+el.dataset.i, 1); save(); render({ focusName: true }); break;
+    case "rounds": S.rounds = Math.min(6, Math.max(1, S.rounds + +el.dataset.d)); save(); $("#rounds-out").textContent = S.rounds; break;
+    case "cat": if (document.activeElement) document.activeElement.blur(); S.category = el.dataset.k; render(); break;
+    case "start":
+      if (S.players.length < MIN_PLAYERS) { const i = $("#name-input"); i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus({ preventScroll: true }); break; }
+      if (!S.category) { const c = $(".cat-grid"); c.scrollIntoView({ block: "center", behavior: "smooth" }); c.animate?.([{ transform: "translateX(0)" }, { transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "translateX(0)" }], { duration: 300 }); break; }
+      sound.whistle(.35); newGame(); break;
+    case "open-card": g.revealOpen = true; render(); setTimeout(() => sound.reveal(false), 250); /* same sound for everyone so the imposter isn't given away */ break;
+    case "hide-card":
+      g.revealOpen = false; sound.tap();
+      if (g.revealIdx < g.players.length - 1) { g.revealIdx++; go("pass"); }
+      else { sound.whistle(.6); go("clues"); }
+      break;
+    case "next-turn":
+      sound.tap();
+      if (g.turn < g.order.length - 1) g.turn++;
+      else if (g.round < S.rounds) { g.round++; g.turn = 0; sound.whistle(.25); }
+      else { sound.whistle(.8); g.voteIdx = 0; g.votes = []; go("vote"); return; }
+      render(); break;
+    case "skip-vote": sound.whistle(.8); g.voteIdx = 0; g.votes = []; go("vote"); break;
+    case "cast":
+      sound.tap(); g.votes.push(+el.dataset.i);
+      if (g.voteIdx < g.players.length - 1) { g.voteIdx++; go("vote"); } else go("tally");
+      break;
+    case "revote": { const t = tallyVotes(); g.candidates = t.top; g.revote = true; g.voteIdx = 0; g.votes = []; go("vote"); break; }
+    case "accuse": {
+      const i = +el.dataset.i; g.accused = i;
+      if (i === g.imposter) { sound.reveal(true); go("caught"); } else finish("wrong");
+      break;
+    }
+    case "hung": finish("hung"); break;
+    case "show-answer": g.guessed = "pending"; sound.tap(); render(); break;
+    case "guess": finish(el.dataset.ok === "1" ? "guessed" : "safe"); break;
+    case "again": newGame(); break;
+    case "reset-scores": S.scores = {}; save(); render(); break;
+    case "quit": confirmOpen = { title: "Quit this game?", body: "The current round ends and nobody scores.", ok: "Quit game", act: "confirm-quit" }; render(); break;
+    case "cancel-sheet": confirmOpen = null; render(); break;
+    case "confirm-quit": confirmOpen = null; S.game = null; go("setup"); break;
+  }
+});
+
+/* ---------- boot (keeps a game in progress across page updates) ---------- */
+function start(data) {
+  if (data && data.S) S = Object.assign(S, data.S);
+  if (S.screen !== "home" && S.screen !== "setup" && !S.game) S.screen = "home";
+  render();
+}
+window.claude?.hot?.snapshot?.(() => ({ S }));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
+</body>
+</html>
