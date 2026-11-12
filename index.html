@@ -256,6 +256,7 @@ const CATEGORIES = {
     label: "Footballers",
     noun: "footballer",
     host: "referee",
+    startLabel: "Kick off",
     theme: {
       bg: "#0d3b2c",
       bgImage: "repeating-linear-gradient(180deg, #0d3b2c 0 64px, #10432f 64px 128px)",
@@ -289,6 +290,47 @@ const CATEGORIES = {
       "Harry Maguire", "Jesse Lingard", "Dele Alli", "Raphinha", "Riyad Mahrez",
       "Sadio Mané", "N'Golo Kanté", "Paul Pogba", "Olivier Giroud", "Romelu Lukaku",
       "Christian Pulisic", "Achraf Hakimi", "Victor Osimhen", "Khvicha Kvaratskhelia", "Ousmane Dembélé"
+    ]
+  },
+  films: {
+    label: "Movies",
+    noun: "film",
+    host: "director",
+    startLabel: "Action!",
+    theme: {
+      bg: "#3a0d14",
+      bgImage: "radial-gradient(90% 45% at 50% -5%, rgba(255, 214, 140, .22), transparent 70%), repeating-linear-gradient(90deg, #3a0d14 0 22px, #48111b 22px 34px, #3a0d14 46px)",
+      panel: "rgba(22, 5, 9, .55)",
+      ink: "#1c0609",
+      cardSub: "#7a3b45"
+    },
+    items: [
+      "Titanic", "Jaws", "Star Wars", "The Lion King", "Toy Story",
+      "Jurassic Park", "Harry Potter", "The Lord of the Rings", "Frozen", "Finding Nemo",
+      "Shrek", "The Godfather", "Home Alone", "Back to the Future", "E.T.",
+      "Ghostbusters", "Grease", "The Wizard of Oz", "Mary Poppins", "The Matrix",
+      "Gladiator", "Forrest Gump", "Pulp Fiction", "The Dark Knight", "Avatar",
+      "Avengers: Endgame", "Spider-Man", "Iron Man", "Black Panther", "Barbie",
+      "Oppenheimer", "Top Gun", "Rocky", "Rambo", "The Terminator",
+      "Die Hard", "Mission: Impossible", "James Bond: Skyfall", "Casino Royale", "Pirates of the Caribbean",
+      "Indiana Jones", "Mamma Mia!", "The Greatest Showman", "La La Land", "Dirty Dancing",
+      "Love Actually", "Notting Hill", "Bridget Jones's Diary", "Four Weddings and a Funeral", "Paddington",
+      "Mrs Doubtfire", "The Mask", "Ace Ventura", "Elf", "The Grinch",
+      "Wallace & Gromit", "Chicken Run", "Despicable Me", "Minions", "Kung Fu Panda",
+      "Up", "Inside Out", "Coco", "Moana", "Encanto",
+      "Aladdin", "Beauty and the Beast", "The Little Mermaid", "Cinderella", "Snow White",
+      "The Jungle Book", "Madagascar", "Ice Age", "Monsters, Inc.", "The Incredibles",
+      "Cars", "Ratatouille", "WALL-E", "Zootopia", "Shrek 2",
+      "The Shawshank Redemption", "Schindler's List", "Saving Private Ryan", "1917", "Dunkirk",
+      "Inception", "Interstellar", "Gremlins", "Fast & Furious", "Transformers",
+      "King Kong", "Godzilla", "Jumanji", "Night at the Museum", "The Hunger Games",
+      "Twilight", "The Exorcist", "Halloween", "Scream", "It",
+      "The Shining", "Psycho", "Alien", "Predator", "Robocop",
+      "Trainspotting", "Lock, Stock and Two Smoking Barrels", "Snatch", "Kingsman", "Hot Fuzz",
+      "Shaun of the Dead", "Billy Elliot", "The Full Monty", "Slumdog Millionaire", "The King's Speech",
+      "Bohemian Rhapsody", "Rocketman", "The Wolf of Wall Street", "Groundhog Day", "The Truman Show",
+      "Joker", "The Batman", "Wonka", "Willy Wonka & the Chocolate Factory", "Matilda",
+      "Mean Girls", "Clueless", "Legally Blonde", "The Devil Wears Prada", "Pretty Woman"
     ]
   }
 };
@@ -508,6 +550,46 @@ const HOSTS = {
       safe: () => `Full time! Fair play wins the day.`,
       imposter: imp => `Full time! <b>${imp}</b> got away with a dive there.`
     }
+  },
+  director: {
+    name: "The Director",
+    draw(pose) {
+      const arm = pose === "card"
+        ? `<g class="arm-up"><path d="M76 98 L92 64" stroke="#2b2d33" stroke-width="10" stroke-linecap="round"/><circle cx="93" cy="60" r="5.5" fill="${SKIN}"/>
+           <g transform="rotate(-10 96 44)"><rect x="82" y="40" width="28" height="18" rx="1.5" fill="#17181b"/>
+           <path d="M82 33 L110 29 L110 35 L82 39Z" fill="#f3f1e8"/><path d="M87 32.3 L91 38.4 M95 31.2 L99 37.3 M103 30.1 L107 36.2" stroke="#17181b" stroke-width="3"/>
+           <path d="M86 47 H106 M86 52 H100" stroke="#f3f1e8" stroke-width="1.6" opacity=".7"/></g></g>`
+        : `<path d="M78 100 Q90 98 90 88" stroke="#2b2d33" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="90" cy="86" r="5.5" fill="${SKIN}"/>
+           <path d="M88 82 L104 72 L106 88 L90 88Z" fill="#f6c90e"/><ellipse cx="105" cy="80" rx="3" ry="8" fill="#d9ab00"/>`;
+      return `<svg viewBox="0 0 110 122" aria-hidden="true">
+        <path d="M16 122 C16 94 30 84 50 84 C70 84 84 94 84 122Z" fill="#2b2d33"/>
+        <path d="M40 84 L50 100 L60 84Z" fill="#f3f1e8"/>
+        <path d="M44 86 Q38 98 46 112 Q50 102 50 94Z" fill="#c2412d"/>
+        <path d="M56 86 Q66 92 60 110 Q55 100 51 93Z" fill="#d4513c"/>
+        ${headSVG(`<path d="M28 58 Q30 74 50 77 Q70 74 72 58 Q66 70 50 70 Q34 70 28 58Z" fill="#4a3a30" opacity=".35"/>
+          <path d="M24 40 Q22 24 46 22 Q72 20 78 34 Q70 38 54 36 Q34 34 24 40Z" fill="#22232a"/>
+          <circle cx="76" cy="31" r="3" fill="#22232a"/>
+          <rect x="33" y="47" width="15" height="10" rx="4" fill="#17181b"/><rect x="52" y="47" width="15" height="10" rx="4" fill="#17181b"/>
+          <path d="M48 51 H52" stroke="#17181b" stroke-width="2.4"/>
+          <path d="M36 49.5 L41 49.5" stroke="#fff" stroke-width="1.4" opacity=".6" stroke-linecap="round"/><path d="M55 49.5 L60 49.5" stroke="#fff" stroke-width="1.4" opacity=".6" stroke-linecap="round"/>
+          <path d="M42 67 Q50 73 58 66" stroke="#7a3b2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>`)}
+        ${arm}
+      </svg>`;
+    },
+    lines: {
+      setupEmpty: () => `Places, everyone! I need a cast of at least three.`,
+      setupReady: () => `The cast is ready. Quiet on set... and roll camera.`,
+      pass: () => `This script is top secret. Eyes off the screen!`,
+      clues1: () => `One word each, darling. Give away the plot and the imposter steals the scene.`,
+      cluesN: r => `Take ${r}. From the top, and make me believe it.`,
+      vote: () => `Time for the critics. Who's the fraud in my cast?`,
+      tallyTop: () => `The reviews are in!`,
+      tallyTie: () => `A split verdict! We're reshooting the vote.`,
+      tallyHung: () => `Still split. That's a wrap, no accusation.`,
+      caught: (imp, n) => `Cut! <b>${imp}</b>, you've been found out. One line to save yourself. Which ${n} is it?`,
+      safe: () => `That's a wrap! Five stars for the honest cast.`,
+      imposter: imp => `What a performance! <b>${imp}</b> deserves an Oscar.`
+    }
   }
 };
 
@@ -577,7 +659,7 @@ const views = {
       </div>
       <div class="btn-row">
         <button class="btn ghost" data-act="home">Back</button>
-        <button class="btn" data-act="start" aria-disabled="${!ready}" ${ready ? "" : 'style="opacity:.55"'}>${ready ? (S.category === "footballers" ? "Kick off" : "Start") : n < MIN_PLAYERS ? `Add ${MIN_PLAYERS - n} more player${MIN_PLAYERS - n === 1 ? "" : "s"}` : "Pick a category"}</button>
+        <button class="btn" data-act="start" aria-disabled="${!ready}" ${ready ? "" : 'style="opacity:.55"'}>${ready ? (CATEGORIES[S.category].startLabel || "Start") : n < MIN_PLAYERS ? `Add ${MIN_PLAYERS - n} more player${MIN_PLAYERS - n === 1 ? "" : "s"}` : "Pick a category"}</button>
       </div>
     </section>`;
   },
