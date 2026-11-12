@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#1d1e22">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
 <title>Imposter</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap">
@@ -332,6 +331,256 @@ const CATEGORIES = {
       "Joker", "The Batman", "Wonka", "Willy Wonka & the Chocolate Factory", "Matilda",
       "Mean Girls", "Clueless", "Legally Blonde", "The Devil Wears Prada", "Pretty Woman"
     ]
+  },
+  clubs: {
+    label: "The 92",
+    noun: "football club",
+    host: "gaffer",
+    startLabel: "Kick off",
+    theme: {
+      bg: "#0f1c36",
+      bgImage: "radial-gradient(55% 30% at 12% 0%, rgba(255, 255, 255, .16), transparent 70%), radial-gradient(55% 30% at 88% 0%, rgba(255, 255, 255, .16), transparent 70%), repeating-linear-gradient(180deg, #0f1c36 0 64px, #12213f 64px 128px)",
+      panel: "rgba(6, 12, 26, .55)",
+      ink: "#0a1326",
+      cardSub: "#3d4f73"
+    },
+    items: [
+      // "The 92": every Premier League and EFL club (2025/26 line-up).
+      "Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton & Hove Albion", "Burnley", "Chelsea",
+      "Crystal Palace", "Everton", "Fulham", "Leeds United", "Liverpool", "Manchester City", "Manchester United",
+      "Newcastle United", "Nottingham Forest", "Sunderland", "Tottenham Hotspur", "West Ham United",
+      "Wolverhampton Wanderers",
+      "Birmingham City", "Blackburn Rovers", "Bristol City", "Charlton Athletic", "Coventry City", "Derby County",
+      "Hull City", "Ipswich Town", "Leicester City", "Middlesbrough", "Millwall", "Norwich City", "Oxford United",
+      "Portsmouth", "Preston North End", "Queens Park Rangers", "Sheffield United", "Sheffield Wednesday",
+      "Southampton", "Stoke City", "Swansea City", "Watford", "West Bromwich Albion", "Wrexham",
+      "AFC Wimbledon", "Barnsley", "Blackpool", "Bolton Wanderers", "Bradford City", "Burton Albion", "Cardiff City",
+      "Doncaster Rovers", "Exeter City", "Huddersfield Town", "Leyton Orient", "Lincoln City", "Luton Town",
+      "Mansfield Town", "Northampton Town", "Peterborough United", "Plymouth Argyle", "Port Vale", "Reading",
+      "Rotherham United", "Stevenage", "Stockport County", "Wigan Athletic", "Wycombe Wanderers",
+      "Accrington Stanley", "Barnet", "Barrow", "Bristol Rovers", "Bromley", "Cambridge United", "Cheltenham Town",
+      "Chesterfield", "Colchester United", "Crawley Town", "Crewe Alexandra", "Fleetwood Town", "Gillingham",
+      "Grimsby Town", "Harrogate Town", "Milton Keynes Dons", "Newport County", "Notts County", "Oldham Athletic",
+      "Salford City", "Shrewsbury Town", "Swindon Town", "Tranmere Rovers", "Walsall"
+    ]
+  },
+  countries: {
+    label: "Countries",
+    noun: "country",
+    host: "explorer",
+    startLabel: "Take off",
+    theme: {
+      bg: "#0e3a52",
+      bgImage: "repeating-linear-gradient(0deg, rgba(255, 255, 255, .05) 0 1px, transparent 1px 48px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .05) 0 1px, transparent 1px 48px), radial-gradient(80% 50% at 50% 0%, #165273, #0e3a52 70%)",
+      panel: "rgba(5, 22, 33, .5)",
+      ink: "#06202e",
+      cardSub: "#3a6278"
+    },
+    // Every UN member state, plus Vatican City, Palestine, Kosovo, Taiwan and the four UK nations.
+    items: [
+      "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia",
+      "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+      "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
+      "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad",
+      "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic",
+      "DR Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador",
+      "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon",
+      "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+      "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
+      "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos",
+      "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar",
+      "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico",
+      "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia",
+      "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea",
+      "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru",
+      "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis",
+      "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "São Tomé and Príncipe",
+      "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
+      "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan",
+      "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo",
+      "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine",
+      "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela",
+      "Vietnam", "Yemen", "Zambia", "Zimbabwe",
+      "Vatican City", "Palestine", "Kosovo", "Taiwan",
+      "England", "Scotland", "Wales", "Northern Ireland"
+    ]
+  },
+  tv: {
+    label: "TV shows",
+    noun: "TV show",
+    host: "telly",
+    startLabel: "Press play",
+    theme: {
+      bg: "#23163d",
+      bgImage: "repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 5px), radial-gradient(90% 50% at 50% 0%, #3a2566, #23163d 70%)",
+      panel: "rgba(12, 6, 24, .5)",
+      ink: "#140b26",
+      cardSub: "#5e4a85"
+    },
+    items: [
+      "EastEnders", "Coronation Street", "Emmerdale", "Hollyoaks", "Doctor Who", "Sherlock", "Peaky Blinders",
+      "Line of Duty", "The Office", "Friends", "Only Fools and Horses", "Fawlty Towers", "Mr Bean", "Blackadder",
+      "Gavin & Stacey", "The Inbetweeners", "Peep Show", "Derry Girls", "Ted Lasso", "Fleabag",
+      "Strictly Come Dancing", "The X Factor", "Britain's Got Talent", "I'm a Celebrity... Get Me Out of Here!",
+      "Love Island", "Big Brother", "The Great British Bake Off", "Gogglebox", "Top Gear", "Match of the Day",
+      "Countdown", "Who Wants to Be a Millionaire?", "The Chase", "Deal or No Deal", "Pointless", "Blind Date",
+      "Gladiators", "The Traitors", "Taskmaster", "Would I Lie to You?", "QI", "Have I Got News for You",
+      "Top of the Pops", "Blue Peter", "Teletubbies", "Peppa Pig", "Bluey", "SpongeBob SquarePants", "The Simpsons",
+      "Family Guy", "South Park", "Rick and Morty", "Game of Thrones", "House of the Dragon", "Breaking Bad",
+      "Stranger Things", "Squid Game", "The Crown", "Bridgerton", "Downton Abbey", "Call the Midwife",
+      "The Walking Dead", "Grey's Anatomy", "Lost", "Prison Break", "The Sopranos", "The Wire", "Succession",
+      "Suits", "Gilmore Girls", "How I Met Your Mother", "The Big Bang Theory", "Seinfeld", "Brooklyn Nine-Nine",
+      "Modern Family", "Glee", "Gossip Girl", "Sex and the City", "Desperate Housewives", "The Fresh Prince of Bel-Air",
+      "Baywatch", "Neighbours", "Home and Away", "Dragons' Den", "The Apprentice", "MasterChef", "Hell's Kitchen",
+      "Wallace and Gromit", "Thomas the Tank Engine", "Postman Pat", "Fireman Sam", "Bob the Builder",
+      "Wednesday", "The Last of Us", "Normal People", "Happy Valley", "Luther", "Killing Eve", "The Bear", "Severance"
+    ]
+  },
+  music: {
+    label: "Singers & bands",
+    noun: "singer or band",
+    host: "dj",
+    startLabel: "Drop the beat",
+    theme: {
+      bg: "#120c2a",
+      bgImage: "radial-gradient(50% 30% at 15% 5%, rgba(255, 60, 170, .28), transparent 70%), radial-gradient(50% 30% at 90% 15%, rgba(40, 200, 255, .22), transparent 70%), radial-gradient(60% 30% at 50% 100%, rgba(140, 60, 255, .22), transparent 70%)",
+      panel: "rgba(8, 4, 20, .55)",
+      ink: "#0b0718",
+      cardSub: "#5a4a8a"
+    },
+    items: [
+      "The Beatles", "The Rolling Stones", "Queen", "Oasis", "Blur", "Coldplay", "Arctic Monkeys", "Radiohead",
+      "Pink Floyd", "Led Zeppelin", "The Who", "The Kinks", "The Smiths", "Joy Division", "The Clash", "Sex Pistols",
+      "Spice Girls", "Take That", "One Direction", "Little Mix", "Girls Aloud", "Westlife", "Boyzone", "Steps",
+      "S Club 7", "Busted", "McFly", "Sugababes", "ABBA", "Fleetwood Mac", "The Eagles", "AC/DC", "Metallica",
+      "Nirvana", "Foo Fighters", "Green Day", "Red Hot Chili Peppers", "Guns N' Roses", "Bon Jovi", "U2",
+      "Kaiser Chiefs", "The Killers", "Kings of Leon", "Muse", "Imagine Dragons", "Maroon 5", "BTS", "Blackpink",
+      "Michael Jackson", "Madonna", "Elvis Presley", "David Bowie", "Elton John", "Freddie Mercury", "Prince",
+      "Whitney Houston", "Mariah Carey", "Celine Dion", "Tina Turner", "Cher", "Dolly Parton", "Kylie Minogue",
+      "Robbie Williams", "Tom Jones", "Rod Stewart", "Phil Collins", "George Michael", "Amy Winehouse", "Adele",
+      "Ed Sheeran", "Lewis Capaldi", "Harry Styles", "Dua Lipa", "Stormzy", "Dave", "Central Cee", "Raye",
+      "Sam Smith", "Olly Murs", "Rita Ora", "Jess Glynne", "Calvin Harris", "Tom Grennan", "Sam Fender",
+      "Taylor Swift", "Beyoncé", "Rihanna", "Lady Gaga", "Katy Perry", "Ariana Grande", "Billie Eilish",
+      "Olivia Rodrigo", "Sabrina Carpenter", "Chappell Roan", "Miley Cyrus", "Britney Spears", "Justin Bieber",
+      "Justin Timberlake", "Bruno Mars", "The Weeknd", "Drake", "Eminem", "Kanye West", "Jay-Z", "Snoop Dogg",
+      "50 Cent", "Tupac", "Post Malone", "Shakira", "Bad Bunny", "Jennifer Lopez", "Pharrell Williams",
+      "Bob Marley", "Stevie Wonder", "Frank Sinatra", "Johnny Cash", "Bob Dylan", "Bruce Springsteen", "Lizzo"
+    ]
+  },
+  animals: {
+    label: "Animals",
+    noun: "animal",
+    host: "zookeeper",
+    startLabel: "Open the gates",
+    theme: {
+      bg: "#1f3b1c",
+      bgImage: "radial-gradient(40% 25% at 10% 8%, rgba(140, 190, 70, .25), transparent 70%), radial-gradient(45% 30% at 92% 30%, rgba(140, 190, 70, .16), transparent 70%), radial-gradient(50% 30% at 20% 85%, rgba(70, 120, 40, .3), transparent 70%)",
+      panel: "rgba(10, 24, 8, .5)",
+      ink: "#0d1f0b",
+      cardSub: "#4d6a3a"
+    },
+    items: [
+      "Lion", "Tiger", "Elephant", "Giraffe", "Zebra", "Hippo", "Rhino", "Gorilla", "Chimpanzee", "Orangutan",
+      "Cheetah", "Leopard", "Jaguar", "Panther", "Hyena", "Meerkat", "Warthog", "Crocodile", "Alligator", "Camel",
+      "Kangaroo", "Koala", "Wombat", "Platypus", "Emu", "Ostrich", "Flamingo", "Penguin", "Polar bear",
+      "Brown bear", "Panda", "Red panda", "Sloth", "Armadillo", "Anteater", "Llama", "Alpaca", "Bison", "Moose",
+      "Reindeer", "Deer", "Fox", "Wolf", "Badger", "Hedgehog", "Squirrel", "Rabbit", "Hare", "Mole", "Otter",
+      "Beaver", "Raccoon", "Skunk", "Bat", "Owl", "Eagle", "Hawk", "Parrot", "Peacock", "Pigeon", "Seagull",
+      "Robin", "Swan", "Duck", "Goose", "Chicken", "Turkey", "Pig", "Cow", "Sheep", "Goat", "Horse", "Donkey",
+      "Dog", "Cat", "Hamster", "Guinea pig", "Mouse", "Rat", "Goldfish", "Shark", "Whale", "Dolphin", "Octopus",
+      "Squid", "Jellyfish", "Starfish", "Seahorse", "Crab", "Lobster", "Seal", "Walrus", "Sea turtle", "Tortoise",
+      "Frog", "Toad", "Snake", "Python", "Lizard", "Chameleon", "Iguana", "Komodo dragon", "Bee", "Wasp",
+      "Butterfly", "Ladybird", "Spider", "Scorpion", "Ant", "Snail", "Worm", "Mosquito", "Grasshopper", "Pelican",
+      "Toucan", "Woodpecker", "Bulldog", "Dalmatian", "Poodle"
+    ]
+  },
+  food: {
+    label: "Food & drink",
+    noun: "food or drink",
+    host: "chef",
+    startLabel: "Let's cook",
+    theme: {
+      bg: "#7a2a1c",
+      bgImage: "repeating-linear-gradient(0deg, rgba(255, 255, 255, .05) 0 24px, transparent 24px 48px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .05) 0 24px, transparent 24px 48px)",
+      panel: "rgba(40, 10, 5, .5)",
+      ink: "#2a0c06",
+      cardSub: "#8a4a3a"
+    },
+    items: [
+      "Pizza", "Burger", "Chips", "Fish and chips", "Full English breakfast", "Sunday roast", "Yorkshire pudding",
+      "Bangers and mash", "Shepherd's pie", "Cottage pie", "Toad in the hole", "Beans on toast", "Cheese on toast",
+      "Sausage roll", "Pork pie", "Cornish pasty", "Scotch egg", "Bacon sandwich", "Chicken nuggets", "Hot dog",
+      "Kebab", "Curry", "Chicken tikka masala", "Naan bread", "Poppadom", "Samosa", "Sushi", "Ramen", "Noodles",
+      "Fried rice", "Spring roll", "Dim sum", "Pad Thai", "Tacos", "Burrito", "Nachos", "Fajitas", "Spaghetti bolognese",
+      "Lasagne", "Carbonara", "Mac and cheese", "Risotto", "Paella", "Croissant", "Baguette", "Crêpe", "Omelette",
+      "Pancakes", "Waffles", "Porridge", "Cornflakes", "Boiled egg", "Avocado on toast", "Salad", "Soup", "Sandwich",
+      "Wrap", "Toastie", "Jacket potato", "Mashed potato", "Roast chicken", "Steak", "Lamb chop", "Gravy", "Ketchup",
+      "Mayonnaise", "Mustard", "Marmite", "Nutella", "Peanut butter", "Jam", "Honey", "Cheese", "Butter", "Bread",
+      "Crisps", "Popcorn", "Chocolate", "Ice cream", "Doughnut", "Cupcake", "Brownie", "Cheesecake", "Trifle",
+      "Apple crumble", "Sticky toffee pudding", "Victoria sponge", "Scone", "Custard", "Jelly", "Bakewell tart",
+      "Jaffa Cakes", "Digestive biscuit", "Candy floss", "Marshmallow", "Banana", "Apple", "Strawberry",
+      "Watermelon", "Pineapple", "Orange", "Grapes", "Lemon", "Mango", "Coconut", "Carrot", "Broccoli",
+      "Brussels sprouts", "Peas", "Sweetcorn", "Mushroom", "Onion", "Garlic", "Chilli", "Tomato",
+      "Tea", "Coffee", "Hot chocolate", "Orange juice", "Milkshake", "Smoothie", "Lemonade", "Coca-Cola",
+      "Irn-Bru", "Water", "Beer", "Wine", "Champagne", "Cocktail", "Pint of Guinness"
+    ]
+  },
+  places: {
+    label: "Famous places",
+    noun: "place",
+    host: "guide",
+    startLabel: "Let's go",
+    theme: {
+      bg: "#3d1f3a",
+      bgImage: "linear-gradient(180deg, #2c1a40 0%, #5a2741 45%, #8a3f2e 100%)",
+      panel: "rgba(20, 8, 18, .45)",
+      ink: "#1d0a18",
+      cardSub: "#7a4a62"
+    },
+    items: [
+      "Eiffel Tower", "Big Ben", "Buckingham Palace", "Tower of London", "Tower Bridge", "London Eye",
+      "Stonehenge", "Edinburgh Castle", "Loch Ness", "Blackpool Tower", "Angel of the North", "Hadrian's Wall",
+      "Wembley Stadium", "Old Trafford", "Anfield", "Windsor Castle", "Statue of Liberty", "Empire State Building",
+      "Times Square", "Golden Gate Bridge", "Grand Canyon", "Niagara Falls", "Mount Rushmore", "Hollywood Sign",
+      "Las Vegas Strip", "White House", "Disneyland", "Central Park", "Colosseum", "Leaning Tower of Pisa",
+      "Vatican", "Venice canals", "Sagrada Família", "Acropolis", "Santorini", "Louvre", "Arc de Triomphe",
+      "Notre-Dame", "Mont Saint-Michel", "Neuschwanstein Castle", "Brandenburg Gate", "Matterhorn", "Mount Everest",
+      "Taj Mahal", "Great Wall of China", "Forbidden City", "Mount Fuji", "Angkor Wat", "Petra",
+      "Pyramids of Giza", "Sphinx", "Burj Khalifa", "Dubai Palm Islands", "Sydney Opera House",
+      "Sydney Harbour Bridge", "Uluru", "Great Barrier Reef", "Christ the Redeemer", "Machu Picchu",
+      "Amazon Rainforest", "Easter Island", "Galápagos Islands", "Victoria Falls", "Mount Kilimanjaro",
+      "Table Mountain", "Sahara Desert", "Northern Lights", "Red Square", "Kremlin", "Hagia Sophia",
+      "CN Tower", "Chichén Itzá", "Cliffs of Moher", "Alcatraz", "Golden Temple", "Las Ramblas", "Eden Project",
+      "Giant's Causeway", "Lake District", "Snowdon", "Ben Nevis", "White Cliffs of Dover", "Area 51",
+      "North Pole", "Antarctica", "Bermuda Triangle", "Hogwarts", "Atlantis"
+    ]
+  },
+  jobs: {
+    label: "Jobs",
+    noun: "job",
+    host: "boss",
+    startLabel: "Clock in",
+    theme: {
+      bg: "#1d2833",
+      bgImage: "repeating-linear-gradient(0deg, rgba(120, 170, 220, .07) 0 1px, transparent 1px 24px), repeating-linear-gradient(90deg, rgba(120, 170, 220, .07) 0 1px, transparent 1px 24px)",
+      panel: "rgba(8, 14, 20, .5)",
+      ink: "#0c141c",
+      cardSub: "#4a5f75"
+    },
+    items: [
+      "Doctor", "Nurse", "Dentist", "Vet", "Paramedic", "Surgeon", "Pharmacist", "Firefighter", "Police officer",
+      "Detective", "Lawyer", "Judge", "Teacher", "Headteacher", "Dinner lady", "Lollipop lady", "Librarian",
+      "Scientist", "Astronaut", "Pilot", "Flight attendant", "Train driver", "Bus driver", "Taxi driver",
+      "Lorry driver", "Postman", "Delivery driver", "Milkman", "Binman", "Builder", "Plumber", "Electrician",
+      "Carpenter", "Painter and decorator", "Roofer", "Mechanic", "Engineer", "Architect", "Farmer", "Gardener",
+      "Fisherman", "Butcher", "Baker", "Chef", "Waiter", "Barista", "Bartender", "Cashier", "Shop assistant",
+      "Hairdresser", "Barber", "Beautician", "Tattoo artist", "Personal trainer", "Footballer", "Referee",
+      "Football manager", "Jockey", "Lifeguard", "Soldier", "Sailor", "Spy", "Security guard", "Bouncer",
+      "Accountant", "Banker", "Estate agent", "Receptionist", "Secretary", "Office manager", "Software developer",
+      "YouTuber", "Influencer", "Journalist", "Newsreader", "Weather presenter", "Photographer", "Actor", "Singer",
+      "DJ", "Comedian", "Magician", "Clown", "Artist", "Author", "Fashion designer", "Model", "Priest", "Prime Minister",
+      "King", "Zookeeper", "Dog walker", "Window cleaner", "Undertaker", "Cleaner", "Nanny", "Santa Claus"
+    ]
   }
 };
 const DEFAULT_ROUNDS = 3;
@@ -476,6 +725,12 @@ function headSVG(face) {
     <ellipse cx="34" cy="62" rx="4" ry="2.5" fill="#f0a08a" opacity=".55"/><ellipse cx="66" cy="62" rx="4" ry="2.5" fill="#f0a08a" opacity=".55"/>
     ${face}`;
 }
+// Shared building blocks for drawing hosts: a body, chest details, a head, and an arm with a prop.
+const figure = (body, chest, head, arm) => `<svg viewBox="0 0 110 122" aria-hidden="true">
+  <path d="M16 122 C16 94 30 84 50 84 C70 84 84 94 84 122Z" fill="${body}"/>${chest}${headSVG(head)}${arm}</svg>`;
+const armTalk = (c, prop = "") => `<path d="M78 100 Q90 98 90 88" stroke="${c}" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="90" cy="86" r="5.5" fill="${SKIN}"/>${prop}`;
+const armUp = (c, prop = "") => `<g class="arm-up"><path d="M76 98 L92 64" stroke="${c}" stroke-width="10" stroke-linecap="round"/>${prop}<circle cx="93" cy="60" r="5.5" fill="${SKIN}"/></g>`;
+
 const HOSTS = {
   presenter: {
     name: "Your host",
@@ -589,6 +844,230 @@ const HOSTS = {
       caught: (imp, n) => `Cut! <b>${imp}</b>, you've been found out. One line to save yourself. Which ${n} is it?`,
       safe: () => `That's a wrap! Five stars for the honest cast.`,
       imposter: imp => `What a performance! <b>${imp}</b> deserves an Oscar.`
+    }
+  },
+  gaffer: {
+    name: "The Gaffer",
+    draw(pose) {
+      const c = "#1b2a4a";
+      return figure(c,
+        `<path d="M40 84 L50 100 L60 84Z" fill="#f3f1e8"/><path d="M37 86 L43 116 L50 116 L45 86Z" fill="#c8102e"/><path d="M39 96 L46 96 M40 104 L47 104" stroke="#f3f1e8" stroke-width="2.5"/>`,
+        `<path d="M25 44 Q24 24 50 22 Q72 22 75 40 Q58 34 25 44Z" fill="#5a5f6a"/><path d="M58 36 Q76 34 86 41 Q74 45 60 41Z" fill="#4a4e57"/>
+         <path d="M35 45 L46 47" stroke="${HAIR}" stroke-width="3" stroke-linecap="round"/><path d="M65 45 L54 47" stroke="${HAIR}" stroke-width="3" stroke-linecap="round"/>
+         <path d="M43 68 Q50 72 57 68" stroke="#7a3b2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+        pose === "card"
+          ? armUp(c, `<rect x="80" y="24" width="30" height="22" rx="3" fill="#17181b" stroke="#9aa0aa" stroke-width="1.5"/><text x="95" y="40" font-size="12" font-weight="900" fill="#ff4d4d" text-anchor="middle" font-family="monospace">OFF</text>`)
+          : armTalk(c, `<rect x="88" y="66" width="16" height="22" rx="2" fill="#c9a26b"/><rect x="90" y="70" width="12" height="16" fill="#fff"/><path d="M92 74 h8 M92 78 h6 M92 82 h8" stroke="#1b2a4a" stroke-width="1.4"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Get your squad together. I need at least three to name a team.`,
+      setupReady: () => `Squad's picked. Go out there and play your game.`,
+      pass: () => `Team sheet's private. Nobody else looks!`,
+      clues1: () => `One word each. Keep your shape and don't give the game away.`,
+      cluesN: r => `Round ${r}. Stay tight, someone's playing for the other side.`,
+      vote: () => `Right, who's been selling us out? One at a time.`,
+      tallyTop: () => `The dressing room has decided.`,
+      tallyTie: () => `All square! We're going to a replay.`,
+      tallyHung: () => `Still level. Nobody takes the blame tonight.`,
+      caught: (imp, n) => `You're coming off, <b>${imp}</b>! One chance to prove you were listening. Which ${n}?`,
+      safe: () => `Three points! Proud of you lot.`,
+      imposter: imp => `Gutted. <b>${imp}</b> pulled the wool over all of us.`
+    }
+  },
+  explorer: {
+    name: "The Explorer",
+    draw(pose) {
+      const c = "#8a7a4f";
+      return figure(c,
+        `<path d="M40 84 L50 98 L60 84Z" fill="#6f6240"/><rect x="28" y="98" width="12" height="10" rx="1.5" fill="#76683f"/><rect x="60" y="98" width="12" height="10" rx="1.5" fill="#76683f"/>`,
+        `<path d="M22 44 Q24 16 50 16 Q76 16 78 44Z" fill="#e8dcb5"/><path d="M14 44 H86" stroke="#d1c294" stroke-width="5" stroke-linecap="round"/><path d="M24 38 H76" stroke="#8a7a4f" stroke-width="3"/>
+         <path d="M39 66 Q45 61 50 64.5 Q55 61 61 66 Q55 69.5 50 67.5 Q45 69.5 39 66Z" fill="#b5651d"/>
+         <path d="M45 72 Q50 75 55 72" stroke="#7a3b2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+        pose === "card"
+          ? armUp(c, `<path d="M93 60 V20" stroke="#6b4a2b" stroke-width="2.5"/><path d="M94 21 L112 26 L94 32Z" fill="#e23b2e"/>`)
+          : armTalk(c, `<circle cx="99" cy="78" r="9" fill="#2f7fb5"/><path d="M93 74 q4 -3 8 0 q-2 4 2 6 q-4 3 -8 -1Z M100 81 q3 1 4 4" fill="#5cae5c"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Passports at the ready! I need at least three travellers.`,
+      setupReady: () => `Bags packed. Seatbelts on. Where in the world are we going?`,
+      pass: () => `Classified destination. Everyone else, look away!`,
+      clues1: () => `One word each about the country. Too obvious and the imposter books a ticket.`,
+      cluesN: r => `Leg ${r} of the journey. Someone's never been there, I'm sure of it.`,
+      vote: () => `Border control! Who doesn't have a passport? One at a time.`,
+      tallyTop: () => `The vote has landed!`,
+      tallyTie: () => `It's a tie! Turbulence ahead, vote again.`,
+      tallyHung: () => `Still tied. Nobody gets stopped at customs.`,
+      caught: (imp, n) => `Stopped at the border, <b>${imp}</b>! Name the ${n} and you can go free.`,
+      safe: () => `Safe landing! The honest travellers win.`,
+      imposter: imp => `Bon voyage! <b>${imp}</b> smuggled themselves through.`
+    }
+  },
+  telly: {
+    name: "The Telly Addict",
+    draw(pose) {
+      const c = "#5b3a8c";
+      return figure(c,
+        `<path d="M30 92 Q50 104 70 92" stroke="#4a2e74" stroke-width="5" fill="none"/><path d="M46 100 V112 M54 100 V112" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round"/>`,
+        `<path d="M26 46 Q20 24 40 22 Q46 14 56 20 Q72 16 76 34 Q78 42 74 46 Q70 32 56 32 Q40 30 26 46Z" fill="#6b4226"/>
+         <path d="M36 47 Q41 44 46 46" stroke="#6b4226" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M54 46 Q59 44 64 47" stroke="#6b4226" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+         <path d="M41 66 Q50 76 59 66 Z" fill="#7a3b2e"/>`,
+        pose === "card"
+          ? armUp(c, `<path d="M82 34 L108 34 L104 56 L86 56Z" fill="#f3f1e8"/><path d="M87 34 V56 M95 34 V56 M103 34 V56" stroke="#e23b2e" stroke-width="3"/><circle cx="87" cy="31" r="4.5" fill="#fff4c9"/><circle cx="95" cy="29" r="5" fill="#fff4c9"/><circle cx="103" cy="31" r="4.5" fill="#fff4c9"/>`)
+          : armTalk(c, `<rect x="86" y="66" width="8" height="18" rx="3" fill="#17181b"/><circle cx="90" cy="70" r="1.8" fill="#e23b2e"/><circle cx="90" cy="76" r="1.2" fill="#9aa0aa"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Grab the sofa. I need at least three people for a proper binge.`,
+      setupReady: () => `Snacks ready, phones on silent. Press play when you're ready.`,
+      pass: () => `No spoilers! Everyone else, look away.`,
+      clues1: () => `One word each about the show. Give away the plot and the imposter catches up.`,
+      cluesN: r => `Episode ${r}. Previously on Imposter... someone was bluffing.`,
+      vote: () => `Season finale! Who's the fake fan? One at a time.`,
+      tallyTop: () => `The ratings are in!`,
+      tallyTie: () => `Cliffhanger! It's a tie, vote again.`,
+      tallyHung: () => `Still tied. Cancelled before the reveal.`,
+      caught: (imp, n) => `Plot twist, it's <b>${imp}</b>! One chance to name the ${n}.`,
+      safe: () => `Roll the credits! The real fans win.`,
+      imposter: imp => `Renewed for another season! <b>${imp}</b> fooled everyone.`
+    }
+  },
+  dj: {
+    name: "The DJ",
+    draw(pose) {
+      const c = "#17181b";
+      return figure(c,
+        `<path d="M38 86 Q50 104 62 86" stroke="#f6c90e" stroke-width="2.4" fill="none"/><circle cx="50" cy="99" r="3.5" fill="#f6c90e"/>`,
+        `<path d="M28 44 Q28 26 50 25 Q72 26 72 44 Q64 34 50 34 Q36 34 28 44Z" fill="#2a2522"/>
+         <path d="M23 54 Q23 18 50 18 Q77 18 77 54" stroke="#2b2d33" stroke-width="5" fill="none"/><rect x="17" y="46" width="11" height="17" rx="4" fill="#ff3ca6"/><rect x="72" y="46" width="11" height="17" rx="4" fill="#ff3ca6"/>
+         <path d="M41 66 Q50 76 59 66 Z" fill="#7a3b2e"/>`,
+        pose === "card"
+          ? armUp(c, `<circle cx="96" cy="38" r="15" fill="#17181b" stroke="#3a3b40" stroke-width="1"/><circle cx="96" cy="38" r="10" fill="none" stroke="#3a3b40" stroke-width="1"/><circle cx="96" cy="38" r="5" fill="#ff3ca6"/>`)
+          : armTalk(c, `<rect x="87" y="68" width="6" height="16" rx="2" fill="#2b2d33"/><circle cx="90" cy="65" r="6" fill="#9aa0aa"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Is this thing on? I need at least three on the dance floor.`,
+      setupReady: () => `Crowd's warmed up. Drop the beat when you're ready!`,
+      pass: () => `Exclusive track. Headphones on, everyone else look away!`,
+      clues1: () => `One word each about the artist. Hit the right note, but don't play the whole song.`,
+      cluesN: r => `Verse ${r}. Someone's miming, I can hear it.`,
+      vote: () => `Who's out of tune? Shout it out, one at a time.`,
+      tallyTop: () => `The crowd has picked their track!`,
+      tallyTie: () => `It's a tie! Encore, vote again.`,
+      tallyHung: () => `Still tied. The music stops with no winner.`,
+      caught: (imp, n) => `Record scratch! <b>${imp}</b>, one chance to name the ${n}.`,
+      safe: () => `Number one! The true fans top the charts.`,
+      imposter: imp => `Smash hit! <b>${imp}</b> faked it all the way.`
+    }
+  },
+  zookeeper: {
+    name: "The Zookeeper",
+    draw(pose) {
+      const c = "#3f6b35";
+      return figure(c,
+        `<path d="M40 84 L50 98 L60 84Z" fill="#335a2b"/><rect x="60" y="98" width="11" height="9" rx="1.5" fill="#355c2c"/><circle cx="34" cy="102" r="5" fill="#f6c90e"/><path d="M31 100 l3 4 l4 -6" stroke="#3f6b35" stroke-width="1.5" fill="none"/>`,
+        `<path d="M24 40 Q26 20 50 20 Q74 20 76 40Z" fill="#8b6a3e"/><path d="M12 41 Q50 33 88 41 Q50 48 12 41Z" fill="#7a5b33"/><path d="M25 38 H75" stroke="#3f2e1a" stroke-width="2.5"/>
+         <path d="M41 66 Q50 76 59 66 Z" fill="#7a3b2e"/>`,
+        pose === "card"
+          ? armUp(c, `<path d="M86 52 Q94 18 112 28 Q100 31 94 54Z" fill="#f6d33c" stroke="#b8961c" stroke-width="1.2"/>`)
+          : armTalk(c, `<rect x="84" y="72" width="7" height="12" rx="3" fill="#17181b"/><rect x="93" y="72" width="7" height="12" rx="3" fill="#17181b"/><rect x="89" y="75" width="6" height="4" fill="#17181b"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Welcome to the zoo! I need at least three keepers on shift.`,
+      setupReady: () => `Feeding time! Open the gates when you're ready.`,
+      pass: () => `Shh, don't scare the animals. Everyone else, look away!`,
+      clues1: () => `One word each about the animal. Too obvious and the imposter will sniff it out.`,
+      cluesN: r => `Round ${r}. One of you has wandered out of the wrong enclosure.`,
+      vote: () => `Who's the snake in the grass? One at a time.`,
+      tallyTop: () => `The pack has spoken!`,
+      tallyTie: () => `A tie! Back in the cage and vote again.`,
+      tallyHung: () => `Still tied. The imposter escapes into the wild.`,
+      caught: (imp, n) => `Caught in the net, <b>${imp}</b>! Name the ${n} to break free.`,
+      safe: () => `Top of the food chain! The honest keepers win.`,
+      imposter: imp => `Sly as a fox! <b>${imp}</b> got away with it.`
+    }
+  },
+  chef: {
+    name: "The Chef",
+    draw(pose) {
+      const c = "#e6e3d8";
+      return figure("#f3f1e8",
+        `<path d="M40 85 Q50 93 60 85 L56 92 Q50 96 44 92Z" fill="#e23b2e"/><circle cx="43" cy="102" r="2" fill="#2b2d33"/><circle cx="57" cy="102" r="2" fill="#2b2d33"/><circle cx="43" cy="112" r="2" fill="#2b2d33"/><circle cx="57" cy="112" r="2" fill="#2b2d33"/>`,
+        `<path d="M30 36 Q20 14 38 14 Q42 3 52 8 Q62 1 66 14 Q82 12 72 36Z" fill="#fff"/><rect x="29" y="30" width="44" height="9" rx="2" fill="#f0eee6" stroke="#d8d4c6"/>
+         <path d="M38 65 Q44 60 50 64 Q56 60 62 65 Q66 62 68 66 Q62 70 56 67 Q50 70 44 67 Q38 70 32 66 Q34 62 38 65Z" fill="${HAIR}"/>
+         <path d="M45 72 Q50 75 55 72" stroke="#7a3b2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+        pose === "card"
+          ? armUp(c, `<path d="M78 48 Q95 22 112 48Z" fill="#c9ccd2"/><rect x="76" y="47" width="38" height="4" rx="2" fill="#9aa0aa"/><circle cx="95" cy="28" r="2.5" fill="#9aa0aa"/>`)
+          : armTalk(c, `<path d="M90 84 L104 58" stroke="#b0844f" stroke-width="3" stroke-linecap="round"/><ellipse cx="105.5" cy="55" rx="4" ry="6" fill="#b0844f" transform="rotate(28 105.5 55)"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Bonjour! I need at least three in my kitchen.`,
+      setupReady: () => `Aprons on, ovens hot. Let's cook!`,
+      pass: () => `Secret recipe! Everyone else, look away.`,
+      clues1: () => `One word each about the dish. Don't serve it up on a plate for the imposter!`,
+      cluesN: r => `Course ${r}. Someone in here can't tell salt from sugar.`,
+      vote: () => `Who's spoiling the broth? One at a time.`,
+      tallyTop: () => `The judges have tasted it!`,
+      tallyTie: () => `A tie! Back in the oven, vote again.`,
+      tallyHung: () => `Still tied. Too many cooks, no verdict.`,
+      caught: (imp, n) => `Order up, <b>${imp}</b>! Name the ${n} or you're washing up.`,
+      safe: () => `Magnifique! The honest cooks win.`,
+      imposter: imp => `Chef's kiss! <b>${imp}</b> cooked the books perfectly.`
+    }
+  },
+  guide: {
+    name: "The Tour Guide",
+    draw(pose) {
+      const c = "#c2412d";
+      return figure(c,
+        `<path d="M42 84 L50 94 L58 84Z" fill="#f3f1e8"/><rect x="58" y="100" width="16" height="11" rx="2" fill="#f3f1e8"/><path d="M60 104 h12 M60 107 h9" stroke="#c2412d" stroke-width="1.2"/>`,
+        `<path d="M26 40 Q28 21 50 21 Q72 21 74 40Z" fill="#1f5fa8"/><path d="M52 37 Q70 35 86 41 Q72 45 54 42Z" fill="#174b85"/>
+         <path d="M27 42 Q24 52 26 58" stroke="${HAIR}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M73 42 Q76 52 74 58" stroke="${HAIR}" stroke-width="4" fill="none" stroke-linecap="round"/>
+         <path d="M41 66 Q50 76 59 66 Z" fill="#7a3b2e"/>`,
+        pose === "card"
+          ? armUp(c, `<rect x="80" y="34" width="30" height="20" rx="3" fill="#2b2d33"/><circle cx="95" cy="44" r="6.5" fill="#9aa0aa"/><circle cx="95" cy="44" r="3.5" fill="#17181b"/><rect x="84" y="30" width="8" height="5" rx="1" fill="#2b2d33"/>`)
+          : armTalk(c, `<path d="M90 86 V54" stroke="#6b4a2b" stroke-width="2.5"/><path d="M91 55 L107 60 L91 65Z" fill="#f6c90e"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Follow the yellow flag! I need at least three on this tour.`,
+      setupReady: () => `Tickets checked. Stay together, let's go!`,
+      pass: () => `Next stop is a secret. Everyone else, look away!`,
+      clues1: () => `One word each about the place. Don't hand the imposter a map!`,
+      cluesN: r => `Stop ${r} on the tour. Someone's clearly never been.`,
+      vote: () => `Who's sneaked onto my tour without a ticket? One at a time.`,
+      tallyTop: () => `The group has decided!`,
+      tallyTie: () => `It's a tie! Let's take a detour and vote again.`,
+      tallyHung: () => `Still tied. The stowaway slips off the bus.`,
+      caught: (imp, n) => `Ticket please, <b>${imp}</b>! Name the ${n} or you're off the tour.`,
+      safe: () => `Wish you were here! The real tourists win.`,
+      imposter: imp => `What a trip! <b>${imp}</b> blagged the whole tour.`
+    }
+  },
+  boss: {
+    name: "The Boss",
+    draw(pose) {
+      const c = "#3b3e47";
+      return figure(c,
+        `<path d="M40 84 L50 106 L60 84Z" fill="#f3f1e8"/><path d="M48 88 L52 88 L54 104 L50 108 L46 104Z" fill="#1f5fa8"/><path d="M40 84 L50 106 L36 92Z M60 84 L50 106 L64 92Z" fill="#2e3038"/>`,
+        `<path d="M26 48 Q22 22 50 21 Q76 21 75 44 Q60 30 44 34 Q32 36 26 48Z" fill="#6b6f78"/>
+         <circle cx="41" cy="53" r="6" fill="none" stroke="#17181b" stroke-width="1.8"/><circle cx="59" cy="53" r="6" fill="none" stroke="#17181b" stroke-width="1.8"/><path d="M47 53 H53" stroke="#17181b" stroke-width="1.8"/>
+         <path d="M35 44 L46 45" stroke="#4a4e57" stroke-width="2.6" stroke-linecap="round"/><path d="M65 44 L54 45" stroke="#4a4e57" stroke-width="2.6" stroke-linecap="round"/>
+         <path d="M43 68 Q50 72 57 68" stroke="#7a3b2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+        pose === "card"
+          ? armUp(c, `<g transform="rotate(10 94 40)"><rect x="82" y="26" width="24" height="28" rx="1" fill="#ffb3c1"/><path d="M86 33 h16 M86 38 h12 M86 43 h16 M86 48 h10" stroke="#7a3b45" stroke-width="1.4"/></g>`)
+          : armTalk(c, `<rect x="84" y="72" width="12" height="13" rx="2" fill="#f3f1e8"/><path d="M96 75 q5 0 5 4 q0 4 -5 4" stroke="#f3f1e8" stroke-width="2" fill="none"/><path d="M87 70 q2 -3 0 -6 M92 70 q2 -3 0 -6" stroke="#c9ccd2" stroke-width="1.2" fill="none"/>`));
+    },
+    lines: {
+      setupEmpty: () => `Morning team. I need at least three of you in this meeting.`,
+      setupReady: () => `Everyone's here. Let's clock in and get started.`,
+      pass: () => `Confidential memo. Everyone else, eyes on your own desk!`,
+      clues1: () => `One word each about the job. Don't hand the imposter the job description!`,
+      cluesN: r => `Meeting point ${r}. Someone here is clearly winging it.`,
+      vote: () => `Performance review time. Who's faking it? One at a time.`,
+      tallyTop: () => `HR has made a decision!`,
+      tallyTie: () => `A tie! Let's take this offline and vote again.`,
+      tallyHung: () => `Still tied. Nobody gets a written warning today.`,
+      caught: (imp, n) => `You're fired, <b>${imp}</b>! Unless you can name the ${n}.`,
+      safe: () => `Promotions all round! The honest staff win.`,
+      imposter: imp => `Employee of the month: <b>${imp}</b>, for faking it brilliantly.`
     }
   }
 };
@@ -910,8 +1389,7 @@ function start(data) {
   if (S.screen !== "home" && S.screen !== "setup" && !S.game) S.screen = "home";
   render();
 }
-window.claude?.hot?.snapshot?.(() => ({ S }));
-window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+start({});
 </script>
 </body>
 </html>
