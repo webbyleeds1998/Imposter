@@ -176,7 +176,11 @@ select {
 .foot-links .text-link { font-size: 14px; }
 #ad-slot { max-width: 480px; margin: -76px auto 0; box-sizing: border-box; padding: 0 16px 24px; }
 #ad-slot .ad-label { font: 600 11px var(--font-label); letter-spacing: .1em; text-transform: uppercase; color: var(--chalk-dim); text-align: center; margin: 0 0 6px; }
-#ad-slot ins { display: block; min-height: 100px; }
+#ad-slot iframe { display: block; margin: 0 auto; border: 0; width: 320px; height: 50px; max-width: 100%; }
+#ad-slot .ad-ask { background: var(--chalk-faint); border-radius: 14px; padding: 12px 14px; display: grid; gap: 8px; text-align: center; }
+#ad-slot .ad-ask p { margin: 0; font-size: 14px; color: var(--chalk-dim); }
+#ad-slot .ad-ask div { display: flex; justify-content: center; gap: 8px; }
+#ad-slot .ad-ask .icon-btn { font-size: 13px; }
 .text-link { background: none; border: 0; color: var(--chalk-dim); text-decoration: underline; text-underline-offset: 3px; font: 500 15px var(--font-body); cursor: pointer; padding: 8px; align-self: center; }
 
 /* Vote */
@@ -253,8 +257,8 @@ select {
 <body>
 
 <div id="app"></div>
-<!-- Ad slot: stays hidden until ADSENSE_CLIENT is set. Only shown on the home and results screens. -->
-<aside id="ad-slot" hidden aria-label="Advertisement"><p class="ad-label">Advertisement</p></aside>
+<!-- Ad slot: hidden unless ADS_ON is true. Only shown on the home and results screens. -->
+<aside id="ad-slot" hidden aria-label="Advertisement"></aside>
 
 <script>
 /* =====================================================================
@@ -607,10 +611,10 @@ const CATEGORIES = {
 // Tip link (e.g. https://ko-fi.com/yourpage). Leave empty to hide the tip link.
 const TIP_URL = "https://ko-fi.com/awgames";
 const tipLink = () => TIP_URL ? `<a class="text-link tip-link" href="${esc(TIP_URL)}" target="_blank" rel="noopener">Enjoying Imposter? Leave a tip</a>` : "";
-// Google AdSense. Leave ADSENSE_CLIENT empty to turn ads off completely (no Google ad code is loaded).
-// ADSENSE_CLIENT looks like "ca-pub-1234567890123456"; ADSENSE_SLOT is the ad unit's number, e.g. "1234567890".
-const ADSENSE_CLIENT = "";
-const ADSENSE_SLOT = "";
+// Adverts (Adsterra 320x50 banner, code lives in ad.html). false turns ads off completely.
+// Players are asked once before any ad loads, because the ad network may use cookies.
+const ADS_ON = true;
+const AD_NETWORK = "Adsterra";
 const AD_SCREENS = ["home", "results"]; // never during set-up, card reveal, clues or voting
 const DEFAULT_ROUNDS = 3;
 const MIN_PLAYERS = 3;
@@ -675,28 +679,27 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;"
 const rand = n => Math.floor(Math.random() * n);
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-/* ---------- ads (off unless ADSENSE_CLIENT is set) ---------- */
+/* ---------- ads (off unless ADS_ON; nothing loads until the player says yes) ---------- */
 const ads = {
-  started: false,
+  shown: null,
+  choice() { return store.get("ads", null); }, // "yes", "no" or null (not asked yet)
+  set(v) { store.set("ads", v); this.shown = null; this.update(); },
   update() {
     const slot = document.getElementById("ad-slot");
     if (!slot) return;
-    const show = !!ADSENSE_CLIENT && AD_SCREENS.includes(S.screen);
+    const c = this.choice();
+    const show = ADS_ON && AD_SCREENS.includes(S.screen) && c !== "no";
     slot.hidden = !show;
-    if (!show || this.started) return;
-    this.started = true;
-    const s = document.createElement("script");
-    s.async = true; s.crossOrigin = "anonymous";
-    s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(ADSENSE_CLIENT);
-    document.head.appendChild(s);
-    const ins = document.createElement("ins");
-    ins.className = "adsbygoogle";
-    ins.dataset.adClient = ADSENSE_CLIENT;
-    if (ADSENSE_SLOT) ins.dataset.adSlot = ADSENSE_SLOT;
-    ins.dataset.adFormat = "auto";
-    ins.dataset.fullWidthResponsive = "true";
-    slot.appendChild(ins);
-    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+    const want = show ? (c === "yes" ? "ad" : "ask") : null;
+    if (!want || want === this.shown) return;
+    this.shown = want;
+    if (want === "ask") {
+      slot.innerHTML = `<div class="ad-ask"><p>Imposter is free. Can we show a small advert here? Adverts may use cookies.</p>
+        <div><button class="icon-btn" data-act="ads-yes">Show adverts</button><button class="icon-btn" data-act="ads-no">No thanks</button></div></div>`;
+    } else {
+      slot.innerHTML = `<p class="ad-label">Advertisement</p><iframe src="ad.html" title="Advertisement" width="320" height="50" scrolling="no" loading="lazy" referrerpolicy="origin"
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>`;
+    }
   }
 };
 const footLinks = () => `<div class="foot-links">${tipLink()}<button class="text-link" data-act="privacy">Privacy</button></div>`;
@@ -1170,12 +1173,13 @@ const views = {
       <div><p class="eyebrow">Small print</p><h2>Privacy</h2></div>
       <div class="guide">
         <section><h3>What stays on this phone</h3>
-          <p>Player names, scores, your round setting and the sound switch are saved in this browser only, so the next game is quicker to set up. They are never sent anywhere. Clearing your browser data removes them.</p></section>
+          <p>Player names, scores, your round setting, the sound switch and your advert choice are saved in this browser only, so the next game is quicker to set up. They are never sent anywhere. Clearing your browser data removes them.</p></section>
         <section><h3>Fonts</h3>
           <p>The lettering is loaded from Google Fonts, which sees your device's internet address when it sends the font files.</p></section>
-        ${ADSENSE_CLIENT ? `<section><h3>Adverts</h3>
-          <p>Adverts on the home and results screens are provided by Google AdSense. Google and its partners may use cookies to show adverts and measure them, and to personalise them if you agree. In the UK and Europe you are asked first, and you can change your choice from the privacy link Google shows with its adverts.</p>
-          <p>Read <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">how Google uses information from sites that use its services</a>. You can also turn off personalised adverts at <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google's My Ad Center</a>.</p></section>` : ""}
+        ${ADS_ON ? `<section><h3>Adverts</h3>
+          <p>If you say yes, a small advert from ${AD_NETWORK} appears on the home and results screens, never during a game. ${AD_NETWORK} and its advertisers may use cookies and your device's internet address to show and count adverts. Nothing loads until you say yes, and the advert runs in a sealed-off box, so it can't see your names or scores.</p>
+          <p>Adverts are <b>${ads.choice() === "yes" ? "on" : "off"}</b> on this phone.</p>
+          <button class="btn ghost" data-act="${ads.choice() === "yes" ? "ads-no" : "ads-yes"}">${ads.choice() === "yes" ? "Turn adverts off" : "Turn adverts on"}</button></section>` : ""}
         ${TIP_URL ? `<section><h3>Tips</h3>
           <p>The tip link opens Ko-fi, which has its own privacy policy. Nothing is shared with Ko-fi unless you choose to tip.</p></section>` : ""}
         <section><h3>No accounts</h3>
@@ -1461,6 +1465,8 @@ document.addEventListener("click", e => {
     case "home": go("home"); break;
     case "howto": go("howto"); break;
     case "privacy": go("privacy"); break;
+    case "ads-yes": ads.set("yes"); render(); break;
+    case "ads-no": ads.set("no"); render(); break;
     case "to-setup": go("setup"); setTimeout(() => { const i = $("#name-input"); if (i && S.players.length < MIN_PLAYERS) i.focus(); }, 50); break;
     case "add-name": addName(); break;
     case "remove": S.players.splice(+el.dataset.i, 1); save(); render({ focusName: true }); break;
