@@ -698,7 +698,7 @@ const ads = {
         <div><button class="icon-btn" data-act="ads-yes">Show adverts</button><button class="icon-btn" data-act="ads-no">No thanks</button></div></div>`;
     } else {
       slot.innerHTML = `<p class="ad-label">Advertisement</p><iframe src="ad.html" title="Advertisement" width="320" height="50" scrolling="no" loading="lazy" referrerpolicy="origin"
-        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe>`;
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>`;
     }
   }
 };
@@ -1177,7 +1177,7 @@ const views = {
         <section><h3>Fonts</h3>
           <p>The lettering is loaded from Google Fonts, which sees your device's internet address when it sends the font files.</p></section>
         ${ADS_ON ? `<section><h3>Adverts</h3>
-          <p>If you say yes, a small advert from ${AD_NETWORK} appears on the home and results screens, never during a game. ${AD_NETWORK} and its advertisers may use cookies and your device's internet address to show and count adverts. Nothing loads until you say yes, and the advert runs in a sealed-off box, so it can't see your names or scores.</p>
+          <p>If you say yes, a small advert from ${AD_NETWORK} appears on the home and results screens, never during a game. ${AD_NETWORK} and its advertisers may use cookies and your device's internet address to show and count adverts. Nothing loads until you say yes, and the advert sits in its own frame, away from the game.</p>
           <p>Adverts are <b>${ads.choice() === "yes" ? "on" : "off"}</b> on this phone.</p>
           <button class="btn ghost" data-act="${ads.choice() === "yes" ? "ads-no" : "ads-yes"}">${ads.choice() === "yes" ? "Turn adverts off" : "Turn adverts on"}</button></section>` : ""}
         ${TIP_URL ? `<section><h3>Tips</h3>
