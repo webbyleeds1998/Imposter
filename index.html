@@ -168,6 +168,7 @@ select {
 .order li.now { background: var(--chalk-faint); color: var(--chalk); font-weight: 600; }
 .order li.done { text-decoration: line-through; text-decoration-color: var(--chalk-faint); }
 .order .n { font: 900 16px var(--font-display); width: 18px; color: var(--yellow); font-variant-numeric: tabular-nums; }
+.tip-link { display: block; text-align: center; font-size: 14px; }
 .text-link { background: none; border: 0; color: var(--chalk-dim); text-decoration: underline; text-underline-offset: 3px; font: 500 15px var(--font-body); cursor: pointer; padding: 8px; align-self: center; }
 
 /* Vote */
@@ -593,6 +594,9 @@ const CATEGORIES = {
     ]
   }
 };
+// Tip link (e.g. https://ko-fi.com/yourpage). Leave empty to hide the tip link.
+const TIP_URL = "";
+const tipLink = () => TIP_URL ? `<a class="text-link tip-link" href="${esc(TIP_URL)}" target="_blank" rel="noopener">Enjoying Imposter? Leave a tip</a>` : "";
 const DEFAULT_ROUNDS = 3;
 const MIN_PLAYERS = 3;
 
@@ -1115,6 +1119,7 @@ const views = {
       <button class="text-link" data-act="howto">Read the full rules</button>
       <div class="spacer"></div>
       <button class="btn" data-act="to-setup">Set up a game</button>
+      ${tipLink()}
     </section>`;
   },
 
@@ -1335,6 +1340,7 @@ const views = {
       <div class="spacer"></div>
       <button class="btn" data-act="again">Play again</button>
       <button class="btn ghost" data-act="to-setup">Change players</button>
+      ${tipLink()}
     </section>`;
   }
 };
