@@ -1,0 +1,8 @@
+// Cloudflare Workers settings: serve the static game files from the repo root.
+{
+  "name": "imposter",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "." },
+  // Needed for Cloudflare's preview builds of pull requests (npx wrangler preview).
+  "previews": {}
+}
