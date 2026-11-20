@@ -617,7 +617,10 @@ const ADS_ON = true;
 const AD_NETWORK = "Adsterra";
 const AD_SCREENS = ["home", "results"]; // never during set-up, card reveal, clues or voting
 const DEFAULT_ROUNDS = 3;
+const MAX_ROUNDS = 10;
 const MIN_PLAYERS = 3;
+// Imposters are always fewer than safe players: 3-4 players = 1, 5-6 = up to 2, 7-8 = up to 3, and so on.
+const maxImposters = n => Math.max(1, Math.floor((n - 1) / 2));
 
 /* ---------- storage (per-device convenience only) ---------- */
 const store = {
@@ -664,13 +667,14 @@ let S = {
   players: store.get("players", []),
   category: null,
   rounds: store.get("rounds", DEFAULT_ROUNDS),
+  imposters: store.get("imposters", 1), // a number, or "random"
   scores: store.get("scores", {}),
   used: store.get("used", {}),
   game: null
 };
 
 function save() {
-  store.set("players", S.players); store.set("rounds", S.rounds);
+  store.set("players", S.players); store.set("rounds", S.rounds); store.set("imposters", S.imposters);
   store.set("scores", S.scores); store.set("used", S.used);
 }
 
@@ -678,6 +682,14 @@ const $ = (sel, root = document) => root.querySelector(sel);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const rand = n => Math.floor(Math.random() * n);
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const andList = xs => xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1];
+// The imposter setting as it applies to the current player count.
+const impHint = () => {
+  const n = S.players.length, max = maxImposters(n);
+  if (impSetting() === "random") return max > 1 ? `Between 1 and ${max}. Nobody knows how many until the end.` : `With ${n < MIN_PLAYERS ? "fewer than 5" : n} players there's only ever 1. Add more players for more.`;
+  return max > 1 ? `Up to ${max} with ${n} players, or Random.` : `Add ${5 - n} more player${5 - n === 1 ? "" : "s"} to play with 2 imposters.`;
+};
+const impSetting = () => S.imposters === "random" ? "random" : Math.min(Math.max(1, +S.imposters || 1), maxImposters(S.players.length));
 
 /* ---------- ads (off unless ADS_ON; nothing loads until the player says yes) ---------- */
 const ads = {
@@ -719,19 +731,34 @@ function pickSecret(catKey) {
 
 function newGame() {
   const players = S.players.slice();
-  const imposter = rand(players.length);
-  // Speaking order: fully random (the imposter can go first).
+  const setting = impSetting(), max = maxImposters(players.length);
+  const count = setting === "random" ? 1 + rand(max) : setting;
+  const imposters = shuffle(players.map((_, i) => i)).slice(0, count).sort((a, b) => a - b);
+  // Random mode keeps the count hidden, unless only one imposter was ever possible.
+  const hidden = setting === "random" && max > 1;
+  // Speaking order: fully random (an imposter can go first).
   const order = shuffle(players.map((_, i) => i));
   S.game = {
-    players, imposter, secret: pickSecret(S.category), category: S.category,
+    players, imposters, hidden, secret: pickSecret(S.category), category: S.category,
     revealIdx: 0, revealOpen: false,
-    order, round: 1, turn: 0,
-    voteIdx: 0, votes: [], candidates: players.map((_, i) => i), revote: false,
+    order, round: 1, turn: 0, rounds: S.rounds,
+    caught: [], voteNo: 1,
+    voteIdx: 0, votes: [], voters: [], candidates: [], revote: false,
     accused: null, outcome: null, guessed: null
   };
+  startVote(S.game);
   save();
   go("pass");
 }
+
+// A fresh vote among everyone who hasn't been caught yet.
+function startVote(g) {
+  g.voters = g.players.map((_, i) => i).filter(i => !g.caught.includes(i));
+  g.candidates = g.voters.slice(); g.revote = false; g.voteIdx = 0; g.votes = [];
+}
+const isImp = (g, i) => g.imposters.includes(i);
+const hiddenImps = g => g.imposters.filter(i => !g.caught.includes(i));
+const impNames = (g, list = g.imposters) => andList(list.map(i => g.players[i]));
 
 function tallyVotes() {
   const g = S.game, counts = {};
@@ -744,7 +771,7 @@ function tallyVotes() {
 
 function finish(outcome) {
   const g = S.game; g.outcome = outcome;
-  const winners = outcome === "safe" ? g.players.filter((_, i) => i !== g.imposter) : [g.players[g.imposter]];
+  const winners = g.players.filter((_, i) => (outcome === "safe") !== isImp(g, i));
   g.players.forEach(p => { if (!(p in S.scores)) S.scores[p] = 0; });
   winners.forEach(p => S.scores[p]++);
   save();
@@ -1155,10 +1182,10 @@ const views = {
       ${host("home")}
       <h2 class="section-title">How to play</h2>
       <ol class="rules">
-        <li><span><b>Everyone sees the secret</b> except one player, who only learns they're the imposter.</span></li>
-        <li><span><b>Take turns saying one word</b> linked to the secret. ${S.rounds} rounds, out loud.</span></li>
+        <li><span><b>Everyone sees the secret</b> except the imposter, who only learns their role. Bigger groups can play with more imposters.</span></li>
+        <li><span><b>Take turns saying one word</b> linked to the secret. ${S.rounds} round${S.rounds === 1 ? "" : "s"}, out loud.</span></li>
         <li><span><b>Vote one by one</b> for who you think the imposter is. Most votes is accused.</span></li>
-        <li><span><b>Caught?</b> The imposter gets one guess at the secret. Right guess steals the win.</span></li>
+        <li><span><b>Caught them all?</b> The imposters get one guess at the secret. Right guess steals the win.</span></li>
       </ol>
       <button class="text-link" data-act="howto">Read the full rules</button>
       <div class="spacer"></div>
@@ -1173,7 +1200,7 @@ const views = {
       <div><p class="eyebrow">Small print</p><h2>Privacy</h2></div>
       <div class="guide">
         <section><h3>What stays on this phone</h3>
-          <p>Player names, scores, your round setting, the sound switch and your advert choice are saved in this browser only, so the next game is quicker to set up. They are never sent anywhere. Clearing your browser data removes them.</p></section>
+          <p>Player names, scores, your round and imposter settings, the sound switch and your advert choice are saved in this browser only, so the next game is quicker to set up. They are never sent anywhere. Clearing your browser data removes them.</p></section>
         <section><h3>Fonts</h3>
           <p>The lettering is loaded from Google Fonts, which sees your device's internet address when it sends the font files.</p></section>
         ${ADS_ON ? `<section><h3>Adverts</h3>
@@ -1198,23 +1225,29 @@ const views = {
         <section><h3>What you need</h3>
           <p>3 or more players and one phone. Everyone sits together, and the phone gets passed around.</p></section>
         <section><h3>1. Set up</h3>
-          <p>Add everyone's name and pick a category, like Footballers or Animals. The game secretly picks one thing from that category, and secretly picks one player to be the imposter.</p></section>
+          <p>Add everyone's name and pick a category, like Footballers or Animals. The game secretly picks one thing from that category, and secretly picks who the imposter is.</p>
+          <p>You also choose how many rounds to play and how many imposters there are. Imposters are always outnumbered: 3 or 4 players have 1, 5 or 6 can have up to 2, 7 or 8 up to 3, and so on. Pick <b>Random</b> and nobody knows how many there are until the end.</p></section>
         <section><h3>2. Look at your card</h3>
           <p>Pass the phone round. When it's your turn, make sure nobody else can see, tap to reveal your card, then hide it and pass on.</p>
           <ul><li><b>Safe players</b> see the secret, for example "Harry Kane".</li>
-          <li><b>The imposter</b> only sees "You're the imposter". They don't know the secret.</li></ul></section>
+          <li><b>Imposters</b> only see that they're an imposter. They don't know the secret, or who the other imposters are.</li></ul></section>
         <section><h3>3. Say a word</h3>
-          <p>Going round in the order on screen, each player says <b>one word</b> out loud that's linked to the secret. Play ${S.rounds} rounds (you can change this on the setup screen).</p>
+          <p>Going round in the order on screen, each player says <b>one word</b> out loud that's linked to the secret. Play as many rounds as you picked on the setup screen.</p>
           <p>Safe players want to prove they know the secret without making it obvious. The imposter listens to everyone's words, works out what the secret might be, and tries to blend in.</p></section>
         <section><h3>4. Vote</h3>
           <p>Everyone takes a turn to say out loud who they think the imposter is, and taps that name. You can't vote for yourself.</p>
           <ul><li>The player with the <b>most votes</b> is accused.</li>
-          <li>If it's a <b>tie</b>, everyone votes again, only between the tied players. If it's still tied, nobody is accused and the imposter wins.</li></ul></section>
-        <section><h3>5. The imposter's last chance</h3>
-          <p>If the accused player is the imposter, they get <b>one guess</b> at the secret, out loud. The game then shows the answer and the group taps whether they got it right.</p></section>
+          <li>If it's a <b>tie</b>, everyone votes again, only between the tied players. If it's still tied, nobody is accused and the imposters win.</li>
+          <li>If the accused player is <b>safe</b>, the imposters win straight away.</li></ul></section>
+        <section><h3>5. More than one imposter</h3>
+          <p>Catching an imposter takes them out of the game, and everyone left votes again to find the next one.</p>
+          <ul><li>If you know how many there are, the game tells you how many are still hiding.</li>
+          <li>On <b>Random</b>, the group decides after each catch: vote again, or say "That's all of them". Stop too early and the hidden imposters win. Vote again when nobody's left and you'll accuse a safe player.</li></ul></section>
+        <section><h3>6. The imposters' last chance</h3>
+          <p>Once every imposter is caught, they get <b>one guess</b> at the secret between them, out loud. The game then shows the answer and the group taps whether they got it right.</p></section>
         <section><h3>Who wins</h3>
-          <ul><li><b>Safe players win</b> if they catch the imposter and the imposter guesses wrong.</li>
-          <li><b>The imposter wins</b> if they aren't caught, if the vote stays tied, or if they're caught but name the secret.</li></ul>
+          <ul><li><b>Safe players win</b> if they catch every imposter and the guess is wrong.</li>
+          <li><b>The imposters win</b> together if any of them stay hidden, if a safe player is accused, if a vote stays tied, or if they're all caught but name the secret.</li></ul>
           <p>The "Wins tonight" table keeps score across games.</p></section>
         <section><h3>Tips</h3>
           <ul><li>Safe players: pick words that only make sense if you know the answer. Too obvious and you hand the imposter the win.</li>
@@ -1250,6 +1283,15 @@ const views = {
         ${S.category ? "" : `<p class="hint">Pick what the secret will be.</p>`}
       </div>
       <div class="panel">
+        <span class="label">Imposters</span>
+        <div class="stepper">
+          <button data-act="imps" data-d="-1" aria-label="Fewer imposters">−</button>
+          <output id="imps-out">${impSetting() === "random" ? "Random" : impSetting()}</output>
+          <button data-act="imps" data-d="1" aria-label="More imposters">+</button>
+        </div>
+        <p class="hint" id="imps-hint">${impHint()}</p>
+      </div>
+      <div class="panel">
         <span class="label">Word rounds</span>
         <div class="stepper">
           <button data-act="rounds" data-d="-1" aria-label="Fewer rounds">−</button>
@@ -1280,11 +1322,13 @@ const views = {
         <button class="btn" data-act="open-card">I'm ${esc(name)}, show me</button>
       </section>`;
     }
-    const imp = g.revealIdx === g.imposter;
+    const imp = isImp(g, g.revealIdx);
+    const many = g.hidden || g.imposters.length > 1;
+    const impNote = g.hidden ? "There might be other imposters. You don't know who." : g.imposters.length > 1 ? `There are ${g.imposters.length} of you. You don't know who the others are.` : "Listen to the clues and work out who it is.";
     const last = g.revealIdx === g.players.length - 1;
     const front = imp
-      ? `<div class="face front imp"><span class="tag">Your role</span><div class="secret">You're the imposter</div><p>Blend in. Listen to the clues and work out who it is.</p></div>`
-      : `<div class="face front safe"><span class="tag">The secret ${esc(noun())}</span><div class="secret">${esc(g.secret)}</div><p class="cat">You're safe. Find the imposter.</p></div>`;
+      ? `<div class="face front imp"><span class="tag">Your role</span><div class="secret">You're ${many ? "an" : "the"} imposter</div><p>Blend in. ${impNote}</p></div>`
+      : `<div class="face front safe"><span class="tag">The secret ${esc(noun())}</span><div class="secret">${esc(g.secret)}</div><p class="cat">You're safe. Find the imposter${many ? "s" : ""}.</p></div>`;
     return `${topbar(quitBtn)}
     <section class="screen pass">
       <div class="progress-dots">${dots}</div>
@@ -1297,7 +1341,7 @@ const views = {
   },
 
   clues() {
-    const g = S.game, total = S.rounds;
+    const g = S.game, total = g.rounds;
     const speakerIdx = g.order[g.turn];
     const pips = Array.from({ length: total }, (_, i) => `<i class="${i + 1 < g.round ? "done" : i + 1 === g.round ? "now" : ""}"></i>`).join("");
     const list = g.order.map((pi, k) => `<li class="${k < g.turn ? "done" : k === g.turn ? "now" : ""}"><span class="n">${k + 1}</span>${esc(g.players[pi])}</li>`).join("");
@@ -1305,7 +1349,7 @@ const views = {
     return `${topbar(quitBtn)}
     <section class="screen">
       <div class="round-head">
-        <div><p class="eyebrow">Round ${g.round} of ${total}</p><h2>Say a word</h2></div>
+        <div><p class="eyebrow">Round ${g.round} of ${total} · ${g.hidden ? "? imposters" : g.imposters.length === 1 ? "1 imposter" : g.imposters.length + " imposters"}</p><h2>Say a word</h2></div>
         <div class="round-pips" aria-hidden="true">${pips}</div>
       </div>
       ${g.round === 1 && g.turn === 0 ? host("clues1") : g.turn === 0 ? host("cluesN", [g.round]) : ""}
@@ -1318,13 +1362,14 @@ const views = {
   },
 
   vote() {
-    const g = S.game, voter = g.voteIdx, name = g.players[voter];
+    const g = S.game, voter = g.voters[g.voteIdx], name = g.players[voter];
     const opts = g.candidates.filter(i => i !== voter);
+    const label = g.voteNo > 1 ? `Vote ${g.voteNo}` : "The vote";
     return `${topbar(quitBtn)}
     <section class="screen">
-      <div><p class="eyebrow">${g.revote ? "Tie-break vote" : "The vote"} · ${voter + 1} of ${g.players.length}</p>
-      <h2>${esc(name)}, who's the imposter?</h2></div>
-      ${voter === 0 && !g.revote ? host("vote") : ""}
+      <div><p class="eyebrow">${g.revote ? "Tie-break vote" : label} · ${g.voteIdx + 1} of ${g.voters.length}</p>
+      <h2>${esc(name)}, who's ${g.caught.length ? "another" : g.imposters.length > 1 || g.hidden ? "an" : "the"} imposter?</h2></div>
+      ${g.voteIdx === 0 && !g.revote && g.voteNo === 1 ? host("vote") : ""}
       <p class="muted">${g.revote ? "It was a tie. Vote again, only between the tied players." : "Say it out loud, then tap their name."}</p>
       <div class="choices">${opts.map(i => `<button class="choice" data-act="cast" data-i="${i}">${esc(g.players[i])}</button>`).join("")}</div>
     </section>`;
@@ -1343,8 +1388,9 @@ const views = {
       msg = `It's a tie between ${t.top.map(i => esc(g.players[i])).join(" and ")}. Everyone votes again, between them only.`;
       btn = `<button class="btn" data-act="revote">Tie-break vote</button>`;
     } else {
-      msg = `Still a tie. Nobody gets accused, so the imposter slips away.`;
-      btn = `<button class="btn red" data-act="hung">Reveal the imposter</button>`;
+      const n = hiddenImps(g).length;
+      msg = `Still a tie. Nobody gets accused, so ${n > 1 || g.hidden ? "the imposters slip" : "the imposter slips"} away.`;
+      btn = `<button class="btn red" data-act="hung">Reveal ${n > 1 || g.hidden ? "the imposters" : "the imposter"}</button>`;
     }
     return `${topbar(quitBtn)}
     <section class="screen">
@@ -1356,12 +1402,31 @@ const views = {
     </section>`;
   },
 
+  found() {
+    const g = S.game, name = esc(g.players[g.accused]);
+    const left = hiddenImps(g).length;
+    const body = g.hidden
+      ? `<p class="muted">Are there more imposters hiding? Talk it over. Vote again to hunt for another, or stop if you think that's everyone. Stop too early and the hidden imposters win. Vote when nobody's left and you'll accuse a safe player.</p>
+        <div class="spacer"></div>
+        <button class="btn" data-act="vote-again">Vote again</button>
+        <button class="btn ghost" data-act="stop-hunt">That's all of them</button>`
+      : `<p class="muted">${left} more imposter${left === 1 ? " is" : "s are"} still hiding. ${name} is out, and everyone else votes again.</p>
+        <div class="spacer"></div>
+        <button class="btn" data-act="vote-again">Next vote</button>`;
+    return `${topbar(quitBtn)}
+    <section class="screen">
+      <div class="verdict imp-win stamp"><span class="eyebrow" style="color:var(--chalk)">Caught ${g.caught.length}${g.hidden ? "" : ` of ${g.imposters.length}`}</span><div class="big">${name} is an imposter</div></div>
+      ${body}
+    </section>`;
+  },
+
   caught() {
-    const g = S.game, imp = g.players[g.imposter];
+    const g = S.game, imp = impNames(g), many = g.imposters.length > 1;
     if (g.guessed === null) {
       return `${topbar(quitBtn)}
       <section class="screen">
-        <div class="verdict imp-win stamp"><span class="eyebrow" style="color:var(--chalk)">Caught</span><div class="big">${esc(imp)} is the imposter</div></div>
+        <div class="verdict imp-win stamp"><span class="eyebrow" style="color:var(--chalk)">Caught</span><div class="big">${esc(imp)} ${many ? "are the imposters" : "is the imposter"}</div></div>
+        ${many ? `<p class="muted">Every imposter is caught. They get one guess at the secret between them, out loud.</p>` : ""}
         ${host("caught", [esc(imp), esc(noun())], { pose: "card" })}
         <div class="spacer"></div>
         <button class="btn" data-act="show-answer">They've guessed, show the answer</button>
@@ -1371,7 +1436,7 @@ const views = {
     <section class="screen">
       <p class="eyebrow">The secret ${esc(noun())} was</p>
       <div class="answer-card stamp"><div class="secret">${esc(g.secret)}</div></div>
-      <h2 style="font-size:clamp(30px,9vw,40px)">Did ${esc(imp)} get it right?</h2>
+      <h2 style="font-size:clamp(30px,9vw,40px)">Did ${many ? "they" : esc(imp)} get it right?</h2>
       <div class="spacer"></div>
       <div class="btn-row">
         <button class="btn ghost" data-act="guess" data-ok="0">No</button>
@@ -1381,12 +1446,15 @@ const views = {
   },
 
   result() {
-    const g = S.game, imp = g.players[g.imposter];
+    const g = S.game, imp = impNames(g), many = g.imposters.length > 1;
+    const wins = many ? "Imposters win" : "Imposter wins", was = many ? "were" : "was";
+    const still = hiddenImps(g).length ? ` ${esc(impNames(g, hiddenImps(g)))} ${hiddenImps(g).length > 1 ? "were" : "was"} still hiding.` : "";
     const head = {
-      safe: ["Safe players win", `${esc(imp)} was caught and couldn't name the ${esc(noun())}.`],
-      wrong: ["Imposter wins", g.accused !== null ? `You accused ${esc(g.players[g.accused])}, but they were safe.` : ""],
-      hung: ["Imposter wins", "The vote stayed tied, so nobody was accused."],
-      guessed: ["Imposter wins", `${esc(imp)} was caught but named the ${esc(noun())}.`]
+      safe: ["Safe players win", `${esc(imp)} ${was} caught and couldn't name the ${esc(noun())}.`],
+      wrong: [wins, g.accused !== null ? `You accused ${esc(g.players[g.accused])}, but they were safe.${g.caught.length ? still : ""}` : ""],
+      hung: [wins, "The vote stayed tied, so nobody was accused." + (g.caught.length ? still : "")],
+      stopped: [wins, `You stopped hunting too soon.${still}`],
+      guessed: [wins, `${esc(imp)} ${was} caught but named the ${esc(noun())}.`]
     }[g.outcome];
     const board = Object.entries(S.scores).filter(([p]) => S.players.includes(p)).sort((a, b) => b[1] - a[1])
       .map(([p, s]) => `<tr><td>${esc(p)}</td><td>${s}</td></tr>`).join("");
@@ -1397,7 +1465,7 @@ const views = {
       </div>
       ${g.outcome === "safe" ? host("safe") : host("imposter", [esc(imp)], { pose: "card" })}
       <dl class="facts">
-        <dt>Imposter</dt><dd>${esc(imp)}</dd>
+        <dt>Imposter${many ? "s" : ""}</dt><dd>${esc(imp)}</dd>
         <dt>${esc(noun())}</dt><dd>${esc(g.secret)}</dd>
       </dl>
       <div class="panel">
@@ -1470,7 +1538,18 @@ document.addEventListener("click", e => {
     case "to-setup": go("setup"); setTimeout(() => { const i = $("#name-input"); if (i && S.players.length < MIN_PLAYERS) i.focus(); }, 50); break;
     case "add-name": addName(); break;
     case "remove": S.players.splice(+el.dataset.i, 1); save(); render({ focusName: true }); break;
-    case "rounds": S.rounds = Math.min(6, Math.max(1, S.rounds + +el.dataset.d)); save(); $("#rounds-out").textContent = S.rounds; break;
+    case "rounds": S.rounds = Math.min(MAX_ROUNDS, Math.max(1, S.rounds + +el.dataset.d)); save(); $("#rounds-out").textContent = S.rounds; break;
+    case "imps": {
+      // Steps through 1, 2, ... max, then Random.
+      const max = maxImposters(S.players.length), cur = impSetting(), d = +el.dataset.d;
+      if (cur === "random") { if (d < 0) S.imposters = max; }
+      else if (cur + d > max) S.imposters = "random";
+      else S.imposters = Math.max(1, cur + d);
+      save(); sound.tap();
+      $("#imps-out").textContent = impSetting() === "random" ? "Random" : impSetting();
+      $("#imps-hint").textContent = impHint();
+      break;
+    }
     case "cat": if (document.activeElement) document.activeElement.blur(); S.category = el.dataset.k; render(); break;
     case "start":
       if (S.players.length < MIN_PLAYERS) { const i = $("#name-input"); i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus({ preventScroll: true }); break; }
@@ -1485,20 +1564,25 @@ document.addEventListener("click", e => {
     case "next-turn":
       sound.tap();
       if (g.turn < g.order.length - 1) g.turn++;
-      else if (g.round < S.rounds) { g.round++; g.turn = 0; sound.whistle(.25); }
-      else { sound.whistle(.8); g.voteIdx = 0; g.votes = []; go("vote"); return; }
+      else if (g.round < g.rounds) { g.round++; g.turn = 0; sound.whistle(.25); }
+      else { sound.whistle(.8); startVote(g); go("vote"); return; }
       render(); break;
-    case "skip-vote": sound.whistle(.8); g.voteIdx = 0; g.votes = []; go("vote"); break;
+    case "skip-vote": sound.whistle(.8); startVote(g); go("vote"); break;
     case "cast":
       sound.tap(); g.votes.push(+el.dataset.i);
-      if (g.voteIdx < g.players.length - 1) { g.voteIdx++; go("vote"); } else go("tally");
+      if (g.voteIdx < g.voters.length - 1) { g.voteIdx++; go("vote"); } else go("tally");
       break;
     case "revote": { const t = tallyVotes(); g.candidates = t.top; g.revote = true; g.voteIdx = 0; g.votes = []; go("vote"); break; }
     case "accuse": {
       const i = +el.dataset.i; g.accused = i;
-      if (i === g.imposter) { sound.reveal(true); go("caught"); } else finish("wrong");
+      if (!isImp(g, i)) { finish("wrong"); break; }
+      g.caught.push(i); sound.reveal(true);
+      // Known count: carry on until everyone's caught. Random: the group decides each time.
+      if (!g.hidden && !hiddenImps(g).length) go("caught"); else go("found");
       break;
     }
+    case "vote-again": sound.whistle(.5); g.voteNo++; startVote(g); go("vote"); break;
+    case "stop-hunt": if (hiddenImps(g).length) finish("stopped"); else go("caught"); break;
     case "hung": finish("hung"); break;
     case "show-answer": g.guessed = "pending"; sound.tap(); render(); break;
     case "guess": finish(el.dataset.ok === "1" ? "guessed" : "safe"); break;
